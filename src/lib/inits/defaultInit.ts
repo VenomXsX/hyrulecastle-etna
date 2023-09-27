@@ -1,4 +1,4 @@
-import Char from '~/types/type';
+import { Char } from '~/types/type';
 
 export const DEFAULT_PLAYER: Char = {
 	name: 'Link',
