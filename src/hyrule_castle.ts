@@ -5,6 +5,9 @@ import { welcomeMessage } from './lib/text/welcome_menu';
 
 function main() {
 	welcomeMessage();
+	// FIXME: [DEBUG]
+	// console.log(gameInit(chooseGameMode()));
+	
 	runGame(gameInit(chooseGameMode()));
 	return;
 }
