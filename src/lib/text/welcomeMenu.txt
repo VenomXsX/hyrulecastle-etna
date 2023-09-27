@@ -1,0 +1,8 @@
+======[ Welcome to the Hyrule Castle ]======
+|
+|
+| Select which game mode you want to play:
+| (0) Quit.
+| (1) Default mode.
+| (2) Enhanced mode (player classes and randomized floors and monsters).
+============================================
