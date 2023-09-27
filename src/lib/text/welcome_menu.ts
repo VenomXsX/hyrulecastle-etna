@@ -11,7 +11,7 @@ const welcomeMessage = () => {
 	console.log(
 		`  2. Enhanced mode (player classes and randomized floors and monsters).`,
 	);
-	console.log(`\n  0. Quit the game.`);
+	console.log(`\n  0. Quit the game.\n`);
 };
 
 export { welcomeMessage };

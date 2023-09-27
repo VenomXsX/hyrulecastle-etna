@@ -24,7 +24,7 @@ type Item = {
 type Gamemode = 'default' | 'enhanced';
 
 type SaveType = {
-	player: Char;
+	player: Char & {max_hp: number};
 	floor: number;
 	gamemode: Gamemode;
 	monsters: MonsterAndFloor;

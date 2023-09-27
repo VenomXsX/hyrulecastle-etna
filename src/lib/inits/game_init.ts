@@ -8,9 +8,11 @@ function gameInit(mode: Gamemode) {
 		mode === 'enhanced' ? rl.question("What's your name: ") : 'Link';
 	const players = JSON.parse(fs.readFileSync('./data/players.json', 'utf-8')); // 1
 	const monsters = JSON.parse(fs.readFileSync('./data/enemies.json', 'utf-8')); // 11
-	const player: Char = name === 'Link' ? players[0] : createChar();
+	const player: Char & { max_hp: number } =
+		name === 'Link' ? players[0] : createChar();
 	const floor = 10; // TODO: add dynamic
 	const monstersWithFloor: MonsterAndFloor = Array(floor).fill([monsters[11]]);
+	player.max_hp = player.hp;
 
 	return {
 		player,
