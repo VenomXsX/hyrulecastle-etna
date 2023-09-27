@@ -1,13 +1,7 @@
 import { Char } from '~/types/type';
 
-function createChar({ name, type, health, atk, def = 0 }: Char) {
-	return {
-		name,
-		type,
-		health,
-		atk,
-		def,
-	};
+function createChar(obj: Char) {
+	return obj;
 }
 
 export default createChar;

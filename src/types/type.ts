@@ -1,9 +1,16 @@
 type Char = {
 	name: string;
-	type: 'player' | 'monster';
-	health: number;
-	atk: number;
-	def?: number;
+	hp: number;
+	mp: number;
+	str: number;
+	int: number;
+	def: number;
+	res: number;
+	spd: number;
+	luck: number;
+	race: number;
+	class: number;
+	rarity: number;
 };
 
 type MonsterAndFloor = {
