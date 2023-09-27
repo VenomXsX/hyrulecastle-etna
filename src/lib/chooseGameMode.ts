@@ -13,6 +13,8 @@ export default function chooseGameMode() {
 			case '2':
 				gamemode = 'enhanced';
 				break;
+			default:
+				console.log('\nPlease try again.');
 		}
 	}
 
