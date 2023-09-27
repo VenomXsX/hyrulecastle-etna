@@ -1,7 +1,8 @@
-import { Char } from '~/types/type';
+import { Char } from '../types/type';
 
-function createChar(obj: Char) {
-	return obj;
+function createChar() {
+// TODO: create char
+	return {};
 }
 
 export default createChar;

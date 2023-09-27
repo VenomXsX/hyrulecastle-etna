@@ -13,9 +13,7 @@ type Char = {
 	rarity: number;
 };
 
-type MonsterAndFloor = {
-	[key: string]: Char[];
-};
+type MonsterAndFloor = Char[][];
 
 type Item = {
 	name: string;
@@ -30,4 +28,4 @@ type SaveType = {
 	inventory: Item[];
 };
 
-export { Char, SaveType };
+export { Char, MonsterAndFloor, SaveType };
