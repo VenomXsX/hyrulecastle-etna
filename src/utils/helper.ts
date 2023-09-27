@@ -1,5 +1,7 @@
-import * as fs from 'fs';
+import * as rl from 'readline-sync';
 
-export const outputText = (path: string) => {
-	console.log(fs.readFileSync(path, 'utf-8'));
-};
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const press_to_continue = () => rl.question('\n\nPress any key to continue...');
+
+
+export { sleep, press_to_continue };

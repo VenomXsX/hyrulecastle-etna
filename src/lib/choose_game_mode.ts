@@ -1,4 +1,5 @@
 import * as rl from 'readline-sync';
+import { Gamemode } from '../types/type';
 
 export default function chooseGameMode() {
 	let gamemode: string = '';
@@ -18,5 +19,5 @@ export default function chooseGameMode() {
 		}
 	}
 
-	return gamemode;
+	return gamemode as Gamemode;
 }

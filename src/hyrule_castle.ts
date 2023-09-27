@@ -1,15 +1,11 @@
-import gameInit from '~/lib/inits/game_init';
-import { outputText } from './utils/helper';
+import gameInit from './lib/inits/game_init';
 import chooseGameMode from './lib/choose_game_mode';
+import runGame from './lib/gameloop';
+import { welcomeMessage } from './lib/text/welcome_menu';
 
 function main() {
-	outputText('./src/lib/text/welcome_menu.txt');
-	const gamemode = chooseGameMode();
-
-	console.log(gamemode);
-
-	// gameInit(); // selected mode
-
+	welcomeMessage();
+	runGame(gameInit(chooseGameMode()));
 	return;
 }
 export default main;

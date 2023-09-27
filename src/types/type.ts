@@ -1,14 +1,19 @@
 type Char = {
 	name: string;
-	type: 'player' | 'monster';
-	health: number;
-	atk: number;
-	def?: number;
+	hp: number;
+	mp: number;
+	str: number;
+	int: number;
+	def: number;
+	res: number;
+	spd: number;
+	luck: number;
+	race: number;
+	class: number;
+	rarity: number;
 };
 
-type MonsterAndFloor = {
-	[key: string]: Char[];
-};
+type MonsterAndFloor = Char[][];
 
 type Item = {
 	name: string;
@@ -16,11 +21,16 @@ type Item = {
 	effect: number;
 };
 
+type Gamemode = 'default' | 'enhanced';
+
 type SaveType = {
-	player: Char;
+	player: Char & {max_hp: number};
 	floor: number;
+	gamemode: Gamemode;
 	monsters: MonsterAndFloor;
 	inventory: Item[];
 };
 
-export { Char, SaveType };
+type TurnType = 'player' | 'monster';
+
+export { Char, MonsterAndFloor, Gamemode, SaveType, TurnType };
