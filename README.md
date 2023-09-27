@@ -40,10 +40,14 @@
 - this TS file stores all the helper functions used by the program (sleep, press_to_continue, etc.).
 ## Features to implement:
 
-- [ ] Iventory object
+- [ ] Accepts player options with number and string case-insensitive.
+- [ ] ~~Dynamic characters.~~
+- [ ] Random last boss spawn based on rarity.
+- [ ] Random player character fetched from JSON.
+- [ ] Inventory object
 - [x] Game state object, to save the game
 - [x] need to loads saved file then pass the contents to gameInit()
-- [ ] Restart feature
+- [ ] ~~Restart feature~~
 - [ ] Item drops by monsters/bosses
 - [ ] Random boss spawn by rarity
 
@@ -69,3 +73,59 @@ Enemie: hp [    ]
 ```
 
 > use current and initial in game loop (when select `continue`)
+
+## Screens
+
+### New title screen [mod] ---------------------
+
+1. New game
+2. Continue game (found 0 saved game)
+3. Quit
+
+
+### "New game" screen ---------------------
+```
+Gamemode selector
+1. Default
+2. Custom (enhanced)
+
+Enter which gamemode you want to play: 
+```
+
+### "Game difficulty selector" [mod] screen ---------------------
+```
+1. Normal
+2. Difficult (1.5x)
+3. Insane (2x)
+
+Enter which difficulty you wish to play at: 
+```
+### "Number of floors selector" screen ---------------------
+```
+How many floors would you like to fight? (default 10, minimum 10):
+```
+
+### New battle screen [mod] ---------------------
+
+```
+[BATTLE] | Floor <number> | Gamemode <mode> | Difficulty <diff> | Coins : <number>
+---------------------------------------------------------
+
+Player : HP-bar
+Stats: [stats array]
+
+Monster : HP-bar
+Stats: [stats array]
+==========================================
+
+Your actions:
+1. Attack       2. Heal
+3. Escape* [mod] 4. Protect* [mod]
+
+
+[*] Escape: stops the fight
+[*] Protect: reduces incoming damage by 50% 
+
+------------------------------------------
+Enter your action:
+```
