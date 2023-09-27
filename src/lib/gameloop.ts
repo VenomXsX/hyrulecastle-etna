@@ -5,7 +5,7 @@ import { sleep, press_to_continue } from '../utils/helper';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
-	let { player, monsters, floor } = JSON.parse(
+	let { player, monsters, floor, gamemode } = JSON.parse(
 		JSON.stringify(gameData),
 	) as SaveType;
 	let currentFloor: number = 0;
@@ -23,29 +23,33 @@ async function runGame(gameData: SaveType) {
 		);
 
 		console.clear();
-		console.log(`=== Current battle stats | Floor ${currentFloor + 1} ===`);
+		console.log(
+			`=== Current battle stats | Floor ${
+				currentFloor + 1
+			} | Gamemode [${gamemode}] ===`,
+		);
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
-			`HP : [${color(
+			`HP : --==[${color(
 				' '.repeat(player_remaining_hp_for_display),
 				'green',
 				'green',
-			)}${'_'.repeat(100 - player_remaining_hp_for_display)}] ${player.hp}/${
-				player.max_hp
-			}`,
+			)}${'_'.repeat(100 - player_remaining_hp_for_display)}]==-- ${
+				player.hp
+			}/${player.max_hp}`,
 		);
 		// index 0 parce que c default sinon...
 		console.log(`${color(monsters[currentFloor][0].name, 'red')}`);
 		console.log(
-			`HP : [${color(
+			`HP : --==[${color(
 				' '.repeat(monster_remaining_hp_for_display),
 				'red',
 				'red',
-			)}${'_'.repeat(100 - monster_remaining_hp_for_display)}] ${
+			)}${'_'.repeat(100 - monster_remaining_hp_for_display)}]==-- ${
 				monsters[currentFloor][0].hp
 			}/${gameData.monsters[currentFloor][0].hp}`,
 		);
-		console.log('-'.repeat(113));
+		console.log('-'.repeat(121));
 
 		// TODO: BATTLE OPTION
 		let playerOption: string = '';

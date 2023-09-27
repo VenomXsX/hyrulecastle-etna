@@ -2,12 +2,52 @@
 
 # The Hyrule Castle
 
-## Base game
+## Base game logic
 
-- welcome menu (can select 2 mode: default or custom (mod))
-- init player in `object` and monsters in `object[]`
-- then loop the game :)
+- Welcome menu (can select 2 modes: default or custom (mod))
+- Initialize game data in `object`
+- then loop the game with the data :)
 
+
+
+	
+## Gamemodes
+
+- Default:
+
+  - game as the subject
+
+- Enhanced:
+  - custom mode where you can customize your character, starting inventory (?), number of floors, item drops (?), etc. 
+
+## Documentation
+### gameInit() function
+
+- the `gameInit()` function takes in `mode` as a paramter and generate the whole game (floors, monsters on each floors, etc.) and put it in an object. 
+- After that a gameloop will start the game with the data inside this object.
+
+### runGame() function
+
+- this functions takes in a `SaveType` object as parameter and serves as the main gameloop.
+
+### chooseGameMode() function
+- this function prompts the user to choose a gamemode and handles input errors.
+
+### type.ts file
+- this TS file stores all the typings used by the program.
+
+### helper.ts file
+- this TS file stores all the helper functions used by the program (sleep, press_to_continue, etc.).
+## Features to implement:
+
+- [ ] Iventory object
+- [x] Game state object, to save the game
+- [x] need to loads saved file then pass the contents to gameInit()
+- [ ] Restart feature
+- [ ] Item drops by monsters/bosses
+- [ ] Random boss spawn by rarity
+
+### Brainstorming section
 ```plaintext
 Link: hp [                  ]
 Enemie: hp [    ]
@@ -29,27 +69,3 @@ Enemie: hp [    ]
 ```
 
 > use current and initial in game loop (when select `continue`)
-	
-## Gamemodes
-
-- Default:
-
-  - game as the subject
-
-- Enhanced:
-  - to be announced
-
-## gameInit() function
-
-- the gameInit() function takes in mode as a paramter and generate the whole game (floors, monsters on each floors) and put it in an object. after that a gameloop with start the game.
-
-## outputText() function
-
-- this functions takes in a path parameter and logs the content of a txt file, mainly used to display menus.
-
-## Features to implement:
-
-- Iventory object
-- Game state object, to save the game
-  - need to loads saved file then pass the contents to gameInit()
-- Restart feature
