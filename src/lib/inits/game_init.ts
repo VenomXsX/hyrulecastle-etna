@@ -1,7 +1,7 @@
 import { Char } from '~/types/type';
 import * as rl from 'readline-sync';
-import createChar from '~/lib/createChar';
-import { DEFAULT_PLAYER } from './defaultInit';
+import createChar from '~/lib/create_char';
+import { DEFAULT_PLAYER } from './default_init';
 
 function gameInit(mode: 'default' | 'enhanced') {
 	const name: string = rl.question("What's your name: "); // TODO: change it with init
