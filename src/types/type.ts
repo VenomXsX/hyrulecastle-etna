@@ -21,11 +21,14 @@ type Item = {
 	effect: number;
 };
 
+type Gamemode = 'default' | 'enhanced';
+
 type SaveType = {
 	player: Char;
 	floor: number;
+	gamemode: Gamemode;
 	monsters: MonsterAndFloor;
 	inventory: Item[];
 };
 
-export { Char, MonsterAndFloor, SaveType };
+export { Char, MonsterAndFloor, Gamemode, SaveType };
