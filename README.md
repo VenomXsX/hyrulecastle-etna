@@ -18,7 +18,7 @@ Enemie: hp [    ]
 3. settings	// go to settings*
 ```
 
-* settings has 2 options: restart the game and save the game,
+* settings has 2 options: restart the game and save/quit the game,
 
 ## Gamemodes
 - Default: 
