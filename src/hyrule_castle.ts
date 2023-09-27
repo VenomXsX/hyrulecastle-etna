@@ -4,6 +4,7 @@ import runGame from './lib/gameloop';
 import { welcomeMessage } from './lib/text/welcome_menu';
 
 function main() {
+	console.clear()
 	welcomeMessage();
 	// FIXME: [DEBUG]
 	// console.log(gameInit(chooseGameMode()));

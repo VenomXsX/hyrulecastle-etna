@@ -13,50 +13,39 @@ async function runGame(gameData: SaveType) {
 	console.clear();
 
 	while (true) {
-		if (player.hp <= 0) {
-			console.log(`You died!`);
-			break;
-		}
-
-		// TODO: REMOVE DEFEATED MONSTER FROM OBJECT
-		if (monsters[currentFloor][0].hp <= 0) {
-			monsters[currentFloor].shift();
-		}
-
-		if (monsters[currentFloor].length === 0) {
-			if (currentFloor === floor - 1) {
-				console.log(`You defeated all the monsters, you won!`);
-				break;
-			}
-			currentFloor += 1;
-			console.log(
-				`You defeated the current floor, you enter floor ${currentFloor + 1}`,
-			);
-		}
-
 		// TODO: STATS DISPLAY
+		const player_remaining_hp_for_display: number = Math.round(
+			(player.hp / player.max_hp) * 100,
+		);
+		const monster_remaining_hp_for_display: number = Math.round(
+			(monsters[currentFloor][0].hp / gameData.monsters[currentFloor][0].hp) *
+				100,
+		);
+
 		console.clear();
 		console.log(`=== Current battle stats | Floor ${currentFloor + 1} ===`);
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
-			`HP : [${color(' '.repeat(player.hp), 'green', 'green')}${' '.repeat(
-				player.max_hp - player.hp,
-			)}] ${player.hp}/${player.max_hp}`,
+			`HP : [${color(
+				' '.repeat(player_remaining_hp_for_display),
+				'green',
+				'green',
+			)}${'_'.repeat(100 - player_remaining_hp_for_display)}] ${player.hp}/${
+				player.max_hp
+			}`,
 		);
 		// index 0 parce que c default sinon...
 		console.log(`${color(monsters[currentFloor][0].name, 'red')}`);
 		console.log(
 			`HP : [${color(
-				' '.repeat(monsters[currentFloor][0].hp),
+				' '.repeat(monster_remaining_hp_for_display),
 				'red',
 				'red',
-			)}${' '.repeat(
-				gameData.monsters[currentFloor][0].hp - monsters[currentFloor][0].hp,
-			)}] ${monsters[currentFloor][0].hp}/${
-				gameData.monsters[currentFloor][0].hp
-			}`,
+			)}${'_'.repeat(100 - monster_remaining_hp_for_display)}] ${
+				monsters[currentFloor][0].hp
+			}/${gameData.monsters[currentFloor][0].hp}`,
 		);
-		console.log('-'.repeat(60));
+		console.log('-'.repeat(113));
 
 		// TODO: BATTLE OPTION
 		let playerOption: string = '';
@@ -90,7 +79,7 @@ async function runGame(gameData: SaveType) {
 							console.log(`You are already on ${color('max HP', 'cyan')}.`);
 							continue;
 						}
-						const remaining_hp = player.max_hp - player.hp;
+						const remaining_hp_for_healing = player.max_hp - player.hp;
 						if (player.hp < Math.round(player.max_hp / 2)) {
 							player.hp += heal_amount;
 							console.log(
@@ -104,7 +93,7 @@ async function runGame(gameData: SaveType) {
 							player.hp = player.max_hp;
 							console.log(
 								`You chose to ${color('heal', 'white')}, you regain ${color(
-									remaining_hp.toString(),
+									remaining_hp_for_healing.toString(),
 									'green',
 								)} HP.`,
 							);
@@ -112,7 +101,11 @@ async function runGame(gameData: SaveType) {
 						}
 				}
 			}
-			turn = 'monster';
+			if (monsters[currentFloor][0].hp <= 0) {
+				turn = 'player';
+			} else {
+				turn = 'monster';
+			}
 			press_to_continue();
 		} else {
 			console.clear();
@@ -136,6 +129,27 @@ async function runGame(gameData: SaveType) {
 			);
 			turn = 'player';
 			press_to_continue();
+		}
+
+		if (player.hp <= 0) {
+			console.log(`You died!`);
+			break;
+		}
+
+		// TODO: REMOVE DEFEATED MONSTER FROM OBJECT
+		if (monsters[currentFloor][0].hp <= 0) {
+			monsters[currentFloor].shift();
+		}
+
+		if (monsters[currentFloor].length === 0) {
+			if (currentFloor === floor - 1) {
+				console.log(`You defeated all the monsters, you won!`);
+				break;
+			}
+			currentFloor += 1;
+			console.log(
+				`You defeated the current floor, you enter floor ${currentFloor + 1}`,
+			);
 		}
 	}
 }
