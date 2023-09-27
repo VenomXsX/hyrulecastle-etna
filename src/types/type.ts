@@ -31,4 +31,6 @@ type SaveType = {
 	inventory: Item[];
 };
 
-export { Char, MonsterAndFloor, Gamemode, SaveType };
+type TurnType = 'player' | 'monster';
+
+export { Char, MonsterAndFloor, Gamemode, SaveType, TurnType };
