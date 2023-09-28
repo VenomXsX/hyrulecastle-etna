@@ -148,7 +148,7 @@ async function runGame(gameData: SaveType) {
 
 		if (monsters[currentFloor].length === 0) {
 			if (currentFloor === floor - 1) {
-				console.log(`You defeated all the monsters, you won!`);
+				console.log(color(`You defeated all the monsters, you won!`, 'green'));
 				break;
 			}
 			currentFloor += 1;
