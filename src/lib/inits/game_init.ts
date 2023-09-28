@@ -4,6 +4,7 @@ import characterSelection from '../character_selection';
 import getMobWithProbability from './get_mob_with_probability';
 import { _debug, getJsonFromFile } from '../../utils/helper';
 import chooseDifficulty from '../choose_difficulty';
+import chooseFloor from './choose_floor';
 
 function getModifierForMobs(
 	monsters: Char[],
@@ -69,7 +70,8 @@ function gameInit(mode: Gamemode): SaveType {
 		player_character_id === 0
 			? { ...players[0], max_hp: players[0].hp }
 			: createChar(player_character_id);
-	const floor: number = mode === 'enhanced' ? 10 : 10; // TODO: add dynamic
+	console.clear();
+	const floor: number = mode === 'enhanced' ? chooseFloor() : 10; // TODO: add dynamic
 	let monstersWithFloor: MonsterAndFloor = [];
 
 	// push enemies in array and bosses in every 10 floors
