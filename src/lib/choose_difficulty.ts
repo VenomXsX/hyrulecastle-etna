@@ -2,6 +2,7 @@ import color from '../utils/color';
 import { input } from '../utils/helper';
 
 function chooseDifficulty() {
+	console.clear();
 	let chosen_difficulty: string = '';
 	console.log(
 		`======[ ${color('Welcome to the Hyrule Castle', 'green')} ]======\n`,
@@ -27,7 +28,10 @@ function chooseDifficulty() {
 		if (isNaN(Number(chosen_difficulty))) {
 			if (valid_options.includes(chosen_difficulty)) break;
 		}
-		if ([1, 2, 3].includes(Number(chosen_difficulty))) break;
+		if ([1, 2, 3].includes(Number(chosen_difficulty))) {
+			chosen_difficulty = valid_options[Number(chosen_difficulty) - 1];
+			break;
+		}
 	}
 	return chosen_difficulty;
 }

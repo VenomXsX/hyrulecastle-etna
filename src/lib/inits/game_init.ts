@@ -1,9 +1,31 @@
 import { Char, Gamemode, MonsterAndFloor, SaveType } from '../../types/type';
 import createChar from '../create_char';
 import characterSelection from '../character_selection';
-import getBossWithProbability from './get_boss_with_probability';
-import { _debug, getJsonFromFile, input } from '../../utils/helper';
+import getMobWithProbability from './get_mob_with_probability';
+import { _debug, getJsonFromFile } from '../../utils/helper';
 import chooseDifficulty from '../choose_difficulty';
+
+function getModifierForMobs(
+	monsters: Char[],
+	mode: Gamemode,
+	multiplier: number,
+) {
+	const monster = getMobWithProbability(monsters);
+	const modifiedMonster = Object.keys(
+		mode === 'enhanced' ? monster : monsters[11],
+	).reduce((acc: Partial<Char>, current): Partial<Char> => {
+		const mob =
+			mode === 'enhanced' ? getMobWithProbability(monsters) : monsters[11];
+
+		if (
+			['hp', 'mp', 'str', 'int', 'def', 'res', 'spd', 'luck'].includes(current)
+		) {
+			return { ...acc, [current]: (mob[current] *= multiplier) };
+		}
+		return { ...acc, [current]: mob[current] };
+	}, {}) as Char;
+	return modifiedMonster;
+}
 
 function gameInit(mode: Gamemode): SaveType {
 	let player_character_id: number = -1;
@@ -27,8 +49,10 @@ function gameInit(mode: Gamemode): SaveType {
 	const monsters = getJsonFromFile<Char[]>('./data/enemies.json');
 	const bosses = getJsonFromFile<Char[]>('./data/bosses.json');
 
-	const boss: Char = Object.keys(getBossWithProbability(bosses)).reduce(
-		(acc: Char, current): Char => {
+	const boss = getMobWithProbability(bosses);
+	const modifiedBoss = Object.keys(boss).reduce(
+		// transform Char to partial (means make properties to optional)
+		(acc: Partial<Char>, current): Partial<Char> => {
 			if (
 				['hp', 'mp', 'str', 'int', 'def', 'res', 'spd', 'luck'].includes(
 					current,
@@ -38,7 +62,8 @@ function gameInit(mode: Gamemode): SaveType {
 			}
 			return { ...acc, [current]: boss[current] };
 		},
-	);
+		{},
+	) as Char; // reset type to required properties
 
 	const player: Char & { max_hp: number } =
 		player_character_id === 0
@@ -50,21 +75,21 @@ function gameInit(mode: Gamemode): SaveType {
 	// push enemies in array and bosses in every 10 floors
 	for (let i = 0; i < floor; i++) {
 		if ((i + 1) % 10 === 0 && i !== 0) {
-			monstersWithFloor.push([boss]);
+			monstersWithFloor.push([modifiedBoss]);
 			continue;
 		}
-		monstersWithFloor.push([monsters[11]]);
+		monstersWithFloor.push([getModifierForMobs(monsters, mode, multiplier)]);
 	}
 
 	//FIXME: [DEBUG]
-	_debug({
-		// player,
-		// floor,
-		// gamemode: mode,
-		monsters: monstersWithFloor,
-		inventory: [],
-		difficulty: player_difficulty,
-	});
+	// _debug({
+	// 	player,
+	// 	floor,
+	// 	gamemode: mode,
+	// 	monsters: monstersWithFloor,
+	// 	inventory: [],
+	// 	difficulty: player_difficulty,
+	// });
 
 	return {
 		player,
