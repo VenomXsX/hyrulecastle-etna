@@ -25,7 +25,7 @@ async function runGame(gameData: SaveType) {
 		console.log(
 			`=== Current battle stats | Floor ${
 				currentFloor + 1
-			} | Gamemode [${gamemode}] ===`,
+			}/${floor} | Gamemode [${gamemode}] ===`,
 		);
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
@@ -116,7 +116,7 @@ async function runGame(gameData: SaveType) {
 				`${color(
 					monsters[currentFloor][0].name,
 					'red',
-				)} is thinking about his attack.`,
+				)} is thinking about his attack...`,
 			);
 			press_to_continue();
 			player.hp -= monsters[currentFloor][0].str;
@@ -140,7 +140,10 @@ async function runGame(gameData: SaveType) {
 		}
 
 		if (monsters[currentFloor][0].hp <= 0) {
+			console.clear();
+			console.log(`${color(monsters[currentFloor][0].name, 'red')} died.`)
 			monsters[currentFloor].shift();
+			press_to_continue();
 		}
 
 		if (monsters[currentFloor].length === 0) {

@@ -34,6 +34,7 @@ function gameInit(mode: Gamemode): SaveType {
 		player_character_id === 0
 			? { ...players[0], max_hp: players[0].hp }
 			: createChar(player_character_id);
+	console.clear();
 	const floor: number = mode === 'enhanced' ? chooseFloor() : 10; // TODO: add dynamic
 	let monstersWithFloor: MonsterAndFloor = [];
 
@@ -47,14 +48,14 @@ function gameInit(mode: Gamemode): SaveType {
 	}
 
 	//FIXME: [DEBUG]
-	// _debug({
-	// 	// player,
-	// 	// floor,
-	// 	// gamemode: mode,
-	// 	monsters: monstersWithFloor,
-	// 	inventory: [],
-	// 	difficulty: player_difficulty,
-	// });
+	_debug({
+		// player,
+		// floor,
+		// gamemode: mode,
+		monsters: monstersWithFloor,
+		inventory: [],
+		difficulty: player_difficulty,
+	});
 
 	return {
 		player,
