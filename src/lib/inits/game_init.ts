@@ -4,6 +4,7 @@ import createChar from '../create_char';
 import * as fs from 'fs';
 import characterSelection from '../character_selection';
 import getBossWithProbability from './get_boss_with_probability';
+import { _debug } from '../../utils/helper';
 
 function gameInit(mode: Gamemode) {
 	const name: string =
@@ -33,7 +34,6 @@ function gameInit(mode: Gamemode) {
 	const floor = 10; // TODO: add dynamic
 	let monstersWithFloor: MonsterAndFloor = [];
 	// push enemies in array and bosses in every 10 floors
-	// FIXME: rework modulo to % 10
 	for (let i = 0; i < floor; i++) {
 		if ((i + 1) % 10 === 0 && i !== 0) {
 			monstersWithFloor.push([boss]);
@@ -43,32 +43,13 @@ function gameInit(mode: Gamemode) {
 	}
 
 	//FIXME: [DEBUG]
-	// fs.writeFileSync(
-	// 	'./test.json',
-	// 	JSON.stringify(
-	// 		{
-	// 			player,
-	// 			floor,
-	// 			gamemode: mode,
-	// 			monsters: monstersWithFloor,
-	// 			inventory: [],
-	// 		},
-	// 		null,
-	// 		2,
-	// 	),
-	// );
-	// console.dir(
-	// 	{
-	// 		player,
-	// 		floor,
-	// 		gamemode: mode,
-	// 		monsters: monstersWithFloor,
-	// 		inventory: [],
-	// 	},
-	// 	{
-	// 		depth: null,
-	// 	},
-	// );
+	// _debug({
+	// 	player,
+	// 	floor,
+	// 	gamemode: mode,
+	// 	monsters: monstersWithFloor,
+	// 	inventory: [],
+	// });
 
 	return {
 		player,
