@@ -1,10 +1,11 @@
+import { escape } from 'querystring';
 import { SaveType, TurnType } from '../types/type';
 import color from '../utils/color';
 import { sleep, press_to_continue, input } from '../utils/helper';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
-	let { player, monsters, floor, gamemode } = JSON.parse(
+	let { player, monsters, floor, gamemode, difficulty } = JSON.parse(
 		JSON.stringify(gameData),
 	) as SaveType;
 	let currentFloor: number = 0;
@@ -25,7 +26,7 @@ async function runGame(gameData: SaveType) {
 		console.log(
 			`=== Current battle stats | Floor ${
 				currentFloor + 1
-			}/${floor} | Gamemode [${gamemode}] ===`,
+			}/${floor} | Gamemode [${color(gamemode, 'yellow')}] | Difficulty [${color(difficulty, 'magenta')}] ===`,
 		);
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
@@ -48,7 +49,7 @@ async function runGame(gameData: SaveType) {
 		);
 		console.log('-'.repeat(121));
 
-		// TODO: BATTLE OPTION
+		// BATTLE OPTION
 		let playerOption: string = '';
 
 		if (turn === 'player') {
@@ -56,10 +57,18 @@ async function runGame(gameData: SaveType) {
 			console.log('1. Attack   | 2. Heal');
 
 			// GET PLAYER OPTION
+			// TODO: let easteregg_counter: number = 1;
 			while (!playerOption) {
+				// if (easteregg_counter === 10) {
+				// 	console.clear();
+				// 	console.log('Stop it...');
+				// 	await sleep(5000);
+				// 	easteregg_counter = 0;
+				// }
 				playerOption = input('What will you do?: ');
 				if (!['1', '2'].includes(playerOption)) {
 					playerOption = '';
+					//easteregg_counter += 1;
 					continue;
 				}
 				console.clear();
