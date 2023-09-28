@@ -75,47 +75,61 @@ Enemie: hp [    ]
 
 > use current and initial in game loop (when select `continue`)
 
+```
+After each battle -> 
+35% to go to a special room (50% trap room 50% treasure room),
+
+Leave option to leave current room -> 
+  if Trap room: see json/subject requirements -> consequences. 
+  if Treasure room: -> consequences.
+
+
+```
+
+
 ## Screens
 
-### New title screen [mod] ---------------------
+### New title screen [mod] 
+```
+  1. New game
+  2. Continue game (found 0 saved game)
+  3. Quit
+```
 
-1. New game
-2. Continue game (found 0 saved game)
-3. Quit
-
-
-### "New game" screen ---------------------
+### "New game" screen 
 ```
 Gamemode selector
-1. Default
-2. Custom (enhanced)
+  1. Default
+  2. Custom (enhanced)
 
 Enter which gamemode you want to play: 
 ```
 
-### "Game difficulty selector" [mod] screen ---------------------
+### "Game difficulty selector" [mod] screen 
 ```
-1. Normal
-2. Difficult (1.5x)
-3. Insane (2x)
+  1. Normal
+  2. Difficult (1.5x)
+  3. Insane (2x)
 
 Enter which difficulty you wish to play at: 
 ```
-
-### "Choose character" screen ------------------------
-1. Link
-2. ...
-3. ...
-4. ...
-
-Who do you wish to play as? 
-
-### "Number of floors selector" screen ---------------------
+### "Number of floors selector" screen [mod]
 ```
 How many floors would you like to fight? (default 10, minimum 10):
 ```
 
-### New battle screen [mod] ---------------------
+### "Choose character" screen 
+```
+  1. Link
+  2. ...
+  3. ...
+  4. ...
+Who do you wish to play as? 
+```
+
+
+
+### New battle screen [mod] 
 
 ```
 [BATTLE] | Floor <number> | Gamemode <mode> | Difficulty <diff> | Coins : <number>
@@ -129,12 +143,13 @@ Stats: [stats array]
 ==========================================
 
 Your actions:
-1. Attack       2. Heal
+1. Attack       2. Skills/Heal [mod]
 3. Escape* [mod] 4. Protect* [mod]
+5. Display inventory [mod]
 
-
-[*] Escape: stops the fight
+[*] Escape: return to 1st floor.
 [*] Protect: reduces incoming damage by 50% 
+9. Save and quit.
 
 ------------------------------------------
 Enter your action:
