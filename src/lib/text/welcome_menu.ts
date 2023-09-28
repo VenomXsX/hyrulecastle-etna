@@ -6,12 +6,12 @@ const welcomeMessage = () => {
 	);
 	console.log(`Select which game mode you want to play:\n`);
 	console.log(
-		`  1. Default mode.`,
+		color(`  1. Default mode.`, 'white'),
 	);
 	console.log(
-		`  2. Enhanced mode (player classes and randomized floors and monsters).`,
+		color(`  2. Enhanced mode (player classes and randomized floors and monsters).`, 'cyan'),
 	);
-	console.log(`\n  0. Quit the game.\n`);
+	console.log(color(`\n  0. Quit the game.\n`, 'red'));
 };
 
 export { welcomeMessage };

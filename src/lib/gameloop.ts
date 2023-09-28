@@ -1,7 +1,6 @@
 import { SaveType, TurnType } from '../types/type';
-import * as rl from 'readline-sync';
 import color from '../utils/color';
-import { sleep, press_to_continue } from '../utils/helper';
+import { sleep, press_to_continue, input } from '../utils/helper';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
@@ -26,7 +25,7 @@ async function runGame(gameData: SaveType) {
 		console.log(
 			`=== Current battle stats | Floor ${
 				currentFloor + 1
-			} | Gamemode [${gamemode}] ===`,
+			}/${floor} | Gamemode [${gamemode}] ===`,
 		);
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
@@ -60,7 +59,7 @@ async function runGame(gameData: SaveType) {
 
 			// GET PLAYER OPTION
 			while (!playerOption) {
-				playerOption = rl.question('What will you do?: ');
+				playerOption = input('What will you do?: ');
 				if (!['1', '2'].includes(playerOption)) {
 					playerOption = '';
 					continue;
@@ -117,7 +116,7 @@ async function runGame(gameData: SaveType) {
 				`${color(
 					monsters[currentFloor][0].name,
 					'red',
-				)} is thinking about his attack.`,
+				)} is thinking about his attack...`,
 			);
 			press_to_continue();
 			player.hp -= monsters[currentFloor][0].str;
@@ -136,17 +135,20 @@ async function runGame(gameData: SaveType) {
 		}
 
 		if (player.hp <= 0) {
-			console.log(`\nYou died on ${color('floor '+ currentFloor, 'red')}`);
+			console.log(`\nYou died on ${color('floor ' + currentFloor, 'red')}`);
 			break;
 		}
 
 		if (monsters[currentFloor][0].hp <= 0) {
+			console.clear();
+			console.log(`${color(monsters[currentFloor][0].name, 'red')} died.`)
 			monsters[currentFloor].shift();
+			press_to_continue();
 		}
 
 		if (monsters[currentFloor].length === 0) {
 			if (currentFloor === floor - 1) {
-				console.log(`You defeated all the monsters, you won!`);
+				console.log(color(`You defeated all the monsters, you won!`, 'green'));
 				break;
 			}
 			currentFloor += 1;

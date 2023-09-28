@@ -1,38 +1,43 @@
 import { Char, Gamemode, MonsterAndFloor, SaveType } from '../../types/type';
-import * as rl from 'readline-sync';
 import createChar from '../create_char';
-import * as fs from 'fs';
 import characterSelection from '../character_selection';
 import getBossWithProbability from './get_boss_with_probability';
-import { _debug } from '../../utils/helper';
+import { _debug, getJsonFromFile } from '../../utils/helper';
+import chooseDifficulty from '../choose_difficulty';
+import chooseFloor from './choose_floor';
 
-function gameInit(mode: Gamemode) {
-	const name: string =
-		mode === 'enhanced' ? rl.question("What's your name: ") : 'Link';
+function gameInit(mode: Gamemode): SaveType {
 	let player_character_id: number = -1;
+	let player_difficulty: string = '';
+	let multiplier: number = 1;
 	if (mode === 'default') {
 		player_character_id = characterSelection();
 	} else {
-		player_character_id = characterSelection(); // à refaire
+		player_character_id = characterSelection();
+		player_difficulty = chooseDifficulty();
 	}
 
-	const players = JSON.parse(
-		fs.readFileSync('./data/players.json', 'utf-8'),
-	) as Char[]; // 1
-	const monsters = JSON.parse(
-		fs.readFileSync('./data/enemies.json', 'utf-8'),
-	) as Char[]; // 11
-	const bosses = JSON.parse(
-		fs.readFileSync('./data/bosses.json', 'utf-8'),
-	) as Char[]; // 0
+	switch (player_difficulty) {
+		case 'difficult':
+			multiplier = 1.5;
+		case 'insane':
+			multiplier = 2;
+	}
+
+	const players = getJsonFromFile<Char[]>('./data/players.json');
+	const monsters = getJsonFromFile<Char[]>('./data/enemies.json');
+	const bosses = getJsonFromFile<Char[]>('./data/bosses.json');
+
 	const boss = getBossWithProbability(bosses);
 
 	const player: Char & { max_hp: number } =
 		player_character_id === 0
 			? { ...players[0], max_hp: players[0].hp }
 			: createChar(player_character_id);
-	const floor = 10; // TODO: add dynamic
+	console.clear();
+	const floor: number = mode === 'enhanced' ? chooseFloor() : 10; // TODO: add dynamic
 	let monstersWithFloor: MonsterAndFloor = [];
+
 	// push enemies in array and bosses in every 10 floors
 	for (let i = 0; i < floor; i++) {
 		if ((i + 1) % 10 === 0 && i !== 0) {
@@ -43,13 +48,14 @@ function gameInit(mode: Gamemode) {
 	}
 
 	//FIXME: [DEBUG]
-	// _debug({
-	// 	player,
-	// 	floor,
-	// 	gamemode: mode,
-	// 	monsters: monstersWithFloor,
-	// 	inventory: [],
-	// });
+	_debug({
+		// player,
+		// floor,
+		// gamemode: mode,
+		monsters: monstersWithFloor,
+		inventory: [],
+		difficulty: player_difficulty,
+	});
 
 	return {
 		player,
@@ -57,6 +63,7 @@ function gameInit(mode: Gamemode) {
 		gamemode: mode,
 		monsters: monstersWithFloor,
 		inventory: [],
+		difficulty: player_difficulty,
 	};
 }
 export default gameInit;
