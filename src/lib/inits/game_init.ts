@@ -1,12 +1,12 @@
 import { Char, Gamemode, MonsterAndFloor, SaveType } from '../../types/type';
 import createChar from '../create_char';
-import * as fs from 'fs';
 import characterSelection from '../character_selection';
 import getBossWithProbability from './get_boss_with_probability';
-import { _debug, getJsonFromFile, input } from '../../utils/helper';
+import { _debug, getJsonFromFile } from '../../utils/helper';
 import chooseDifficulty from '../choose_difficulty';
+import chooseFloor from './choose_floor';
 
-function gameInit(mode: Gamemode) {
+function gameInit(mode: Gamemode): SaveType {
 	let player_character_id: number = -1;
 	let player_difficulty: string = '';
 	let multiplier: number = 1;
@@ -34,7 +34,7 @@ function gameInit(mode: Gamemode) {
 		player_character_id === 0
 			? { ...players[0], max_hp: players[0].hp }
 			: createChar(player_character_id);
-	const floor: number = mode === 'enhanced' ? 11 : 10; // TODO: add dynamic
+	const floor: number = mode === 'enhanced' ? chooseFloor() : 10; // TODO: add dynamic
 	let monstersWithFloor: MonsterAndFloor = [];
 
 	// push enemies in array and bosses in every 10 floors
