@@ -44,12 +44,12 @@ function gameInit(mode: Gamemode) {
 		player_character_id === 0
 			? { ...players[0], max_hp: players[0].hp }
 			: createChar(player_character_id);
-	const floor = 20; // TODO: add dynamic
+	const floor = 10; // TODO: add dynamic
 	let monstersWithFloor: MonsterAndFloor = [];
 	// push enemies in array and bosses in every 10 floors
 	// FIXME: rework modulo to % 10
 	for (let i = 0; i < floor; i++) {
-		if (i % 9 === 0 && i !== 0) {
+		if ((i + 1) % 10 === 0 && i !== 0) {
 			monstersWithFloor.push([boss]);
 			continue;
 		}
@@ -57,20 +57,20 @@ function gameInit(mode: Gamemode) {
 	}
 
 	//FIXME: [DEBUG]
-	fs.writeFileSync(
-		'./test.json',
-		JSON.stringify(
-			{
-				player,
-				floor,
-				gamemode: mode,
-				monsters: monstersWithFloor,
-				inventory: [],
-			},
-			null,
-			2,
-		),
-	);
+	// fs.writeFileSync(
+	// 	'./test.json',
+	// 	JSON.stringify(
+	// 		{
+	// 			player,
+	// 			floor,
+	// 			gamemode: mode,
+	// 			monsters: monstersWithFloor,
+	// 			inventory: [],
+	// 		},
+	// 		null,
+	// 		2,
+	// 	),
+	// );
 	// console.dir(
 	// 	{
 	// 		player,
