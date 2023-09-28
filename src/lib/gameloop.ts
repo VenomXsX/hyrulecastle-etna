@@ -136,11 +136,10 @@ async function runGame(gameData: SaveType) {
 		}
 
 		if (player.hp <= 0) {
-			console.log(`You died!`);
+			console.log(`\nYou died on ${color('floor '+ currentFloor, 'red')}`);
 			break;
 		}
 
-		// TODO: REMOVE DEFEATED MONSTER FROM OBJECT
 		if (monsters[currentFloor][0].hp <= 0) {
 			monsters[currentFloor].shift();
 		}

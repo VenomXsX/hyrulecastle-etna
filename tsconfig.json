@@ -10,6 +10,6 @@
 		"strict": true,
 		"skipLibCheck": true
 	},
-	"include": ["src/*"],
+	"include": ["src/*", "src/base_game/hyrule_castle.ts"],
 	"exclude": ["node_modules", "build"]
 }

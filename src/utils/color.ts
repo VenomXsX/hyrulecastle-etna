@@ -32,25 +32,26 @@ const backgound = (message: string, backgound?: Color) => {
  * @returns Return a formated string with color
  */
 const color = (
-	message: string,
+	message: string | number,
 	foregroundColor?: Color,
 	backgroundColor?: Color,
 ) => {
+	const msg = message.toString();
 	switch (foregroundColor) {
 		case 'red':
-			return `\x1b[1;31m${backgound(message, backgroundColor)}\x1b[0m`;
+			return `\x1b[1;31m${backgound(msg, backgroundColor)}\x1b[0m`;
 		case 'green':
-			return `\x1b[1;32m${backgound(message, backgroundColor)}\x1b[0m`;
+			return `\x1b[1;32m${backgound(msg, backgroundColor)}\x1b[0m`;
 		case 'yellow':
-			return `\x1b[1;33m${backgound(message, backgroundColor)}\x1b[0m`;
+			return `\x1b[1;33m${backgound(msg, backgroundColor)}\x1b[0m`;
 		case 'blue':
-			return `\x1b[1;34m${backgound(message, backgroundColor)}\x1b[0m`;
+			return `\x1b[1;34m${backgound(msg, backgroundColor)}\x1b[0m`;
 		case 'magenta':
-			return `\x1b[1;35m${backgound(message, backgroundColor)}\x1b[0m`;
+			return `\x1b[1;35m${backgound(msg, backgroundColor)}\x1b[0m`;
 		case 'cyan':
-			return `\x1b[1;36m${backgound(message, backgroundColor)}\x1b[0m`;
+			return `\x1b[1;36m${backgound(msg, backgroundColor)}\x1b[0m`;
 		case 'white':
-			return `\x1b[1;37m${backgound(message, backgroundColor)}\x1b[0m`;
+			return `\x1b[1;37m${backgound(msg, backgroundColor)}\x1b[0m`;
 		default:
 			return message;
 	}

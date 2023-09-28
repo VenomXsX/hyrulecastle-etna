@@ -6,7 +6,7 @@ const welcomeMessage = () => {
 	);
 	console.log(`Select which game mode you want to play:\n`);
 	console.log(
-		`  1. Default mode. (which you play Link and defeat all Bokoblins)`,
+		`  1. Default mode.`,
 	);
 	console.log(
 		`  2. Enhanced mode (player classes and randomized floors and monsters).`,

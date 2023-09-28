@@ -40,7 +40,7 @@
 - this TS file stores all the helper functions used by the program (sleep, press_to_continue, etc.).
 ## Features to implement:
 
-- [ ] Accepts player options with number and string case-insensitive.
+- [ ] Accepts player options (combat phase & character selection phase) with number and string case-insensitive.
 - [ ] ~~Dynamic characters.~~
 - [ ] Random last boss spawn based on rarity.
 - [ ] Random player character fetched from JSON.
@@ -50,6 +50,7 @@
 - [ ] ~~Restart feature~~
 - [ ] Item drops by monsters/bosses
 - [ ] Random boss spawn by rarity
+- [ ] UI: welcome screen lasts for 2 seconds then main menu screen (optional)
 
 ### Brainstorming section
 ```plaintext
@@ -100,6 +101,15 @@ Enter which gamemode you want to play:
 
 Enter which difficulty you wish to play at: 
 ```
+
+### "Choose character" screen ------------------------
+1. Link
+2. ...
+3. ...
+4. ...
+
+Who do you wish to play as? 
+
 ### "Number of floors selector" screen ---------------------
 ```
 How many floors would you like to fight? (default 10, minimum 10):
