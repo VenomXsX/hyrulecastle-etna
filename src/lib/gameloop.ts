@@ -1,13 +1,11 @@
-import { escape } from 'querystring';
 import { SaveType, TurnType } from '../types/type';
 import color from '../utils/color';
 import { sleep, press_to_continue, input } from '../utils/helper';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
-	let { player, monsters, floor, gamemode, difficulty } = JSON.parse(
-		JSON.stringify(gameData),
-	) as SaveType;
+	let { player, monsters, floor, gamemode, difficulty } =
+		structuredClone(gameData);
 	let currentFloor: number = 0;
 	let turn: TurnType = 'player';
 	console.clear();
@@ -26,7 +24,10 @@ async function runGame(gameData: SaveType) {
 		console.log(
 			`=== Current battle stats | Floor ${
 				currentFloor + 1
-			}/${floor} | Gamemode [${color(gamemode, 'yellow')}] | Difficulty [${color(difficulty, 'magenta')}] ===`,
+			}/${floor} | Gamemode [${color(
+				gamemode,
+				'yellow',
+			)}] | Difficulty [${color(difficulty, 'magenta')}] ===`,
 		);
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
@@ -142,7 +143,9 @@ async function runGame(gameData: SaveType) {
 		}
 
 		if (player.hp <= 0) {
-			console.log(`\nYou died on ${color('floor ' + (currentFloor + 1), 'red')}`);
+			console.log(
+				`\nYou died on ${color('floor ' + (currentFloor + 1), 'red')}`,
+			);
 			break;
 		}
 

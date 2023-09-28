@@ -26,7 +26,7 @@ type Item = {
 type Gamemode = 'default' | 'enhanced';
 
 type SaveType = {
-	player: Char & {max_hp: number};
+	player: Char & { max_hp: number };
 	floor: number;
 	gamemode: Gamemode;
 	monsters: MonsterAndFloor;
@@ -36,4 +36,6 @@ type SaveType = {
 
 type TurnType = 'player' | 'monster';
 
-export { Char, MonsterAndFloor, Gamemode, SaveType, TurnType };
+type Difficulty = 'normal' | 'difficult' | 'insane';
+
+export { Char, MonsterAndFloor, Gamemode, SaveType, TurnType, Difficulty };
