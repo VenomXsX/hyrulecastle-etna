@@ -1,7 +1,6 @@
 import color from '../utils/color';
 import { Char } from '../types/type';
-import { strCapitalize } from '../utils/helper';
-import * as rl from 'readline-sync';
+import { input, strCapitalize } from '../utils/helper';
 import * as fs from 'fs';
 import { press_to_continue } from '../utils/helper';
 
@@ -43,7 +42,7 @@ function characterSelection() {
 	let userInput = '';
 	while (true) {
 		userInput = strCapitalize(
-			rl.question('Who do you wish to play as? (Default: Link) '),
+			input('Who do you wish to play as? (Default: Link) '),
 		);
 
 		if (userInput === '') {

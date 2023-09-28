@@ -1,7 +1,6 @@
 import { SaveType, TurnType } from '../types/type';
-import * as rl from 'readline-sync';
 import color from '../utils/color';
-import { sleep, press_to_continue } from '../utils/helper';
+import { sleep, press_to_continue, input } from '../utils/helper';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
@@ -60,7 +59,7 @@ async function runGame(gameData: SaveType) {
 
 			// GET PLAYER OPTION
 			while (!playerOption) {
-				playerOption = rl.question('What will you do?: ');
+				playerOption = input('What will you do?: ');
 				if (!['1', '2'].includes(playerOption)) {
 					playerOption = '';
 					continue;
@@ -136,7 +135,7 @@ async function runGame(gameData: SaveType) {
 		}
 
 		if (player.hp <= 0) {
-			console.log(`\nYou died on ${color('floor '+ currentFloor, 'red')}`);
+			console.log(`\nYou died on ${color('floor ' + currentFloor, 'red')}`);
 			break;
 		}
 

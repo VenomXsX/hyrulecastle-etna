@@ -1,13 +1,12 @@
 import { Char, Gamemode, MonsterAndFloor, SaveType } from '../../types/type';
-import * as rl from 'readline-sync';
 import createChar from '../create_char';
 import * as fs from 'fs';
 import characterSelection from '../character_selection';
 import getBossWithProbability from './get_boss_with_probability';
-import { _debug } from '../../utils/helper';
+import { _debug, getJsonFromFile, input } from '../../utils/helper';
 import chooseDifficulty from '../choose_difficulty';
 
-function gameInit(mode: Gamemode): SaveType {
+function gameInit(mode: Gamemode) {
 	let player_character_id: number = -1;
 	let player_difficulty: string = '';
 	let multiplier: number = 1;
@@ -25,22 +24,17 @@ function gameInit(mode: Gamemode): SaveType {
 			multiplier = 2;
 	}
 
-	const players = JSON.parse(
-		fs.readFileSync('./data/players.json', 'utf-8'),
-	) as Char[]; // 1
-	const monsters = JSON.parse(
-		fs.readFileSync('./data/enemies.json', 'utf-8'),
-	) as Char[]; // 11
-	const bosses = JSON.parse(
-		fs.readFileSync('./data/bosses.json', 'utf-8'),
-	) as Char[]; // 0
+	const players = getJsonFromFile<Char[]>('./data/players.json');
+	const monsters = getJsonFromFile<Char[]>('./data/enemies.json');
+	const bosses = getJsonFromFile<Char[]>('./data/bosses.json');
+
 	const boss = getBossWithProbability(bosses);
 
 	const player: Char & { max_hp: number } =
 		player_character_id === 0
 			? { ...players[0], max_hp: players[0].hp }
 			: createChar(player_character_id);
-	const floor = 10; // TODO: add dynamic
+	const floor: number = mode === 'enhanced' ? 11 : 10; // TODO: add dynamic
 	let monstersWithFloor: MonsterAndFloor = [];
 
 	// push enemies in array and bosses in every 10 floors
@@ -53,15 +47,14 @@ function gameInit(mode: Gamemode): SaveType {
 	}
 
 	//FIXME: [DEBUG]
-	_debug({
-		// player,
-		// floor,
-		// gamemode: mode,
-		monsters: monstersWithFloor,
-		inventory: [],
-		difficulty: player_difficulty,
-	});
-	process.exit();
+	// _debug({
+	// 	// player,
+	// 	// floor,
+	// 	// gamemode: mode,
+	// 	monsters: monstersWithFloor,
+	// 	inventory: [],
+	// 	difficulty: player_difficulty,
+	// });
 
 	return {
 		player,
