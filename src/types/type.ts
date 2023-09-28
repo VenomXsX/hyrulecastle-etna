@@ -1,4 +1,5 @@
 type Char = {
+	id: number;
 	name: string;
 	hp: number;
 	mp: number;
