@@ -30,10 +30,9 @@ async function runGame(gameData: SaveType) {
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
 			`HP : --==[${color(
-				' '.repeat(player_remaining_hp_for_display),
+				'♥'.repeat(player_remaining_hp_for_display),
 				'green',
-				'green',
-			)}${'_'.repeat(100 - player_remaining_hp_for_display)}]==-- ${
+			)}${'♡'.repeat(100 - player_remaining_hp_for_display)}]==-- ${
 				player.hp
 			}/${player.max_hp}`,
 		);
@@ -41,10 +40,9 @@ async function runGame(gameData: SaveType) {
 		console.log(`${color(monsters[currentFloor][0].name, 'red')}`);
 		console.log(
 			`HP : --==[${color(
-				' '.repeat(monster_remaining_hp_for_display),
+				'♥'.repeat(monster_remaining_hp_for_display),
 				'red',
-				'red',
-			)}${'_'.repeat(100 - monster_remaining_hp_for_display)}]==-- ${
+			)}${'♡'.repeat(100 - monster_remaining_hp_for_display)}]==-- ${
 				monsters[currentFloor][0].hp
 			}/${gameData.monsters[currentFloor][0].hp}`,
 		);
@@ -135,13 +133,13 @@ async function runGame(gameData: SaveType) {
 		}
 
 		if (player.hp <= 0) {
-			console.log(`\nYou died on ${color('floor ' + currentFloor, 'red')}`);
+			console.log(`\nYou died on ${color('floor ' + (currentFloor + 1), 'red')}`);
 			break;
 		}
 
 		if (monsters[currentFloor][0].hp <= 0) {
 			console.clear();
-			console.log(`${color(monsters[currentFloor][0].name, 'red')} died.`)
+			console.log(`${color(monsters[currentFloor][0].name, 'red')} died.`);
 			monsters[currentFloor].shift();
 			press_to_continue();
 		}
