@@ -1,4 +1,5 @@
 type Char = {
+	[key: string]: any;
 	id: number;
 	name: string;
 	hp: number;
@@ -30,6 +31,7 @@ type SaveType = {
 	gamemode: Gamemode;
 	monsters: MonsterAndFloor;
 	inventory: Item[];
+	difficulty: string;
 };
 
 type TurnType = 'player' | 'monster';
