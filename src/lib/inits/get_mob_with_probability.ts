@@ -1,7 +1,7 @@
 import { Char } from '../../types/type';
 
-function getBossWithProbability(bosses: Char[]) {
-	const highestRarity = bosses.reduce(
+function getMobWithProbability(mob: Char[]) {
+	const highestRarity = mob.reduce(
 		(acc, item) => (acc < item.rarity ? item.rarity : acc),
 		0,
 	);
@@ -11,8 +11,8 @@ function getBossWithProbability(bosses: Char[]) {
 		for (let j = 0; j < i; j++) rarities.push(highestRarity - i + 1);
 
 	const index = Math.floor(Math.random() * rarities.length);
-	const filteredBosses = bosses.filter((x) => x.rarity === rarities[index]);
-	return filteredBosses[Math.floor(Math.random() * filteredBosses.length)];
+	const filteredMob = mob.filter((x) => x.rarity === rarities[index]);
+	return filteredMob[Math.floor(Math.random() * filteredMob.length)];
 }
 
-export default getBossWithProbability;
+export default getMobWithProbability;
