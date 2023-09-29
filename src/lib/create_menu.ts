@@ -1,4 +1,4 @@
-import { keyMap } from '../utils/keyMap';
+import { KeyMap, keyMap } from '../utils/keyMap';
 import { handleEvent, sleep } from '../utils/helper';
 
 const createMenu = async (
@@ -19,7 +19,7 @@ const createMenu = async (
 	eventRef.resume();
 	eventRef.on('data', (e) => {
 		const key = e.toString('hex');
-		console.log(key);
+		// console.log(key);
 		switch (key) {
 			case keyMap.exit:
 				process.exit(0);
@@ -47,6 +47,9 @@ const createMenu = async (
 			case keyMap.two:
 				menuInput = 'two';
 				break;
+			case keyMap.three:
+				menuInput = 'three';
+				break;
 			default:
 		}
 	});
@@ -60,7 +63,7 @@ const createMenu = async (
 
 		func(printColor, menuIndex);
 
-		switch (menuInput) {
+		switch (menuInput as KeyMap) {
 			case 'up':
 				menuIndex = menuIndex - 1;
 				if (menuIndex < minMax.min) menuIndex = minMax.max;
@@ -69,15 +72,18 @@ const createMenu = async (
 				menuIndex = menuIndex + 1;
 				if (menuIndex > minMax.max) menuIndex = minMax.min;
 				break;
-			case "zero":
+			case 'zero':
 				handleEvent(eventRef, 'off');
 				return 0;
-			case "one":
+			case 'one':
 				handleEvent(eventRef, 'off');
 				return 1;
-			case "two":
+			case 'two':
 				handleEvent(eventRef, 'off');
 				return 2;
+			case 'three':
+				handleEvent(eventRef, 'off');
+				return 3;
 			case 'enter':
 				handleEvent(eventRef, 'off');
 				return menuIndex;
@@ -86,7 +92,7 @@ const createMenu = async (
 				break;
 		}
 
-		console.log(menuInput);
+		// console.log(menuInput);
 		tick++;
 
 		menuInput = '';
