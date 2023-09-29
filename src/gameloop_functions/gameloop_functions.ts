@@ -6,6 +6,7 @@ import {
 	Item,
 	TurnType,
 	MonsterAndFloor,
+	SaveType,
 } from '../types/type';
 import {
 	press_to_continue,
@@ -14,6 +15,7 @@ import {
 } from '../utils/helper';
 import getEntitiesByRarity from '../lib/inits/get_entities_by_rarity';
 import { handleQuantity } from '../lib/handle_object';
+import * as fs from 'fs';
 
 function displayStats(
 	currentFloor: number,
@@ -91,22 +93,24 @@ function displayBattlePhase({
 	playerObj,
 	monster_current_floor,
 	current_floor,
+	gamedata,
 }: {
 	turn: TurnType;
 	playerObj: Char;
 	monster_current_floor: Char[];
 	current_floor: number;
+	gamedata: SaveType
 }): [boolean, TurnType] {
 	let playerOption: string = '';
 
 	if (turn === 'player') {
 		console.log('===== Options =====');
-		console.log('1. Attack   | 2. Heal');
+		console.log('1. Attack   | 2. Heal  | 3. Save and quit');
 
 		// GET PLAYER OPTION
 		while (!playerOption) {
 			playerOption = input('What will you do?: ');
-			if (!['1', '2'].includes(playerOption)) {
+			if (!['1', '2', '3'].includes(playerOption)) {
 				playerOption = '';
 				continue;
 			}
@@ -160,6 +164,13 @@ function displayBattlePhase({
 						);
 						break;
 					}
+				case '3':
+					const SaveGameFile: SaveType = structuredClone(gamedata);
+					console.clear();
+					console.log('Saving...');
+					fs.writeFileSync('./.savegame.json', JSON.stringify(gamedata, null, 2));
+					console.log('Saved');
+					process.exit(0);
 			}
 		}
 		if (monster_current_floor[0].hp <= 0) {
@@ -399,6 +410,7 @@ function displayLastmessageLevelingSpecialRoom({
 		console.log(
 			`You defeated the current floor, you enter floor ${current_floor + 2}`,
 		);
+		press_to_continue();
 		return [(current_floor += 1), player_exp, player_lvl];
 	}
 	return [current_floor, player_exp, player_lvl];

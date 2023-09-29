@@ -1,4 +1,5 @@
 import color from '../../utils/color';
+import * as fs from 'fs';
 
 const welcomeMessage = (printColor: boolean, menuIndex: number) => {
 	console.log(
@@ -17,6 +18,12 @@ const welcomeMessage = (printColor: boolean, menuIndex: number) => {
 			menuIndex === 2 ? (printColor ? 'cyan' : undefined) : undefined,
 		),
 	);
+	console.log(
+		color(
+			`  3. Continue (found ${fs.existsSync('./.savegame.json') ? '1' : '0'} saved game).`,
+			menuIndex === 3 ? (printColor ? 'cyan' : undefined) : undefined,
+		)
+	)
 	console.log(
 		color(
 			`\n  0. Quit the game.\n`,
