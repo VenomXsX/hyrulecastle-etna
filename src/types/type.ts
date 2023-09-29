@@ -20,7 +20,8 @@ type MonsterAndFloor = Char[][];
 type Item = {
 	name: string;
 	description: string;
-	effect: number;
+	effect?: number;
+	quantity: number;
 };
 
 type Gamemode = 'default' | 'enhanced';
