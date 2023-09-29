@@ -81,11 +81,5 @@ async function main() {
 		menuInput = '';
 		await sleep(maxTick);
 	}
-	// welcomeMessage();
-	// FIXME: [DEBUG]
-	// console.log(gameInit(chooseGameMode()));
-
-	// runGame(gameInit(chooseGameMode()));
-	return;
 }
 export default main;

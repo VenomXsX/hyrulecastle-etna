@@ -4,6 +4,9 @@ import {
 	Gamemode,
 	MonsterAndFloor,
 	SaveType,
+	Item,
+	Class,
+	Spell,
 } from '../../types/type';
 import createChar from '../create_char';
 import characterSelection from '../character_selection';
@@ -56,6 +59,9 @@ function gameInit(mode: Gamemode): SaveType {
 	const players = getJsonFromFile<Char[]>('./data/players.json');
 	const monsters = getJsonFromFile<Char[]>('./data/enemies.json');
 	const bosses = getJsonFromFile<Char[]>('./data/bosses.json');
+	const items = getJsonFromFile<Item[]>('./data/items.json');
+	const classes = getJsonFromFile<Class[]>('./data/classes.json');
+	const spells = getJsonFromFile<Spell[]>('./data/spells.json');
 
 	_debug(searchObjById(monsters, 3));
 
@@ -107,9 +113,11 @@ function gameInit(mode: Gamemode): SaveType {
 	return {
 		player,
 		floor,
+		classes,
+		spells,
 		gamemode: mode,
 		monsters: monstersWithFloor,
-		inventory: [],
+		inventory: items,
 		difficulty: player_difficulty,
 		player_lvl: 1,
 		player_exp: 0,
