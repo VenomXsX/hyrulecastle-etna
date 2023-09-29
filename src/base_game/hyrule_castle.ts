@@ -8,13 +8,13 @@ async function main() {
 	console.clear();
 
 	const keyMap = {
-		up: '1b5b41',
-		down: '1b5b42',
-		left: '1b5b44',
-		right: '1b5b43',
-		enter: '0d',
-		exit: '03',
-		'': '',
+		up: '1b5b41', // [ArrowUp]
+		down: '1b5b42', // [ArrowDown]
+		left: '1b5b44', // [ArrowLeft]
+		right: '1b5b43', // [ArrowRight]
+		enter: '0d', // [Enter]
+		exit: '03', // [Ctrl + C]
+		'': '', // type error handle...
 	};
 
 	const maxTick = 15;
@@ -31,7 +31,7 @@ async function main() {
 		const key = e.toString('hex');
 		console.log(key);
 		switch (key) {
-			case keyMap.exit: // ctrl+c
+			case keyMap.exit:
 				process.exit(0);
 			case keyMap.up:
 				menuInput = 'up';
@@ -51,6 +51,7 @@ async function main() {
 			default:
 		}
 	});
+
 	while (true) {
 		console.clear();
 		if (tick === maxTick) {
@@ -80,11 +81,5 @@ async function main() {
 		menuInput = '';
 		await sleep(maxTick);
 	}
-	// welcomeMessage();
-	// FIXME: [DEBUG]
-	// console.log(gameInit(chooseGameMode()));
-
-	// runGame(gameInit(chooseGameMode()));
-	return;
 }
 export default main;

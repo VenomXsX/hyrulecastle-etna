@@ -15,27 +15,68 @@ type Char = {
 	rarity: number;
 };
 
+type Class = {
+	id: number;
+	name: string;
+	strengths: number[];
+	weaknesses: number[];
+	attack_type: 'physical' | 'magical';
+	alignment: 'good' | 'evil';
+	rarity: number;
+};
+
 type MonsterAndFloor = Char[][];
 
 type Item = {
+	id: number;
 	name: string;
 	description: string;
 	effect: number;
+	quantity: number;
+	rarity: number;
+};
+
+type Spell = {
+	id: number;
+	name: string;
+	description: string;
+	quantity: number;
+	cost: number | string;
+	dmg: number | string;
+	effect: string;
+	cooldown: number | string;
+	race: string;
+	class: string;
+	rarity: number;
 };
 
 type Gamemode = 'default' | 'enhanced';
 
 type SaveType = {
 	player: Char & { max_hp: number };
+	classes: Class[];
+	spells: Spell[];
 	floor: number;
 	gamemode: Gamemode;
 	monsters: MonsterAndFloor;
 	inventory: Item[];
 	difficulty: string;
+	player_lvl: number;
+	player_exp: number;
 };
 
 type TurnType = 'player' | 'monster';
 
 type Difficulty = 'normal' | 'difficult' | 'insane';
 
-export { Char, MonsterAndFloor, Gamemode, SaveType, TurnType, Difficulty };
+export {
+	Char,
+	Class,
+	MonsterAndFloor,
+	Gamemode,
+	SaveType,
+	TurnType,
+	Difficulty,
+	Item,
+	Spell,
+};
