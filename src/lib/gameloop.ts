@@ -18,7 +18,7 @@ async function runGame(gameData: SaveType) {
 	console.clear();
 
 	while (true) {
-		// TODO: STATS DISPLAY
+		// STATS DISPLAY
 		const player_remaining_hp_for_display: number = Math.round(
 			(player.hp / player.max_hp) * 100,
 		);
@@ -54,7 +54,8 @@ async function runGame(gameData: SaveType) {
 				player.hp
 			}/${player.max_hp}`,
 		);
-		// index 0 parce que c default sinon...
+
+		// index 0 because there's only 1 monster per floor
 		console.log(`${color(monsters[currentFloor][0].name, 'red')}`);
 		console.log(
 			`HP : --==[${color(
@@ -75,21 +76,14 @@ async function runGame(gameData: SaveType) {
 			console.log('1. Attack   | 2. Heal');
 
 			// GET PLAYER OPTION
-			// TODO: let easteregg_counter: number = 1;
 			while (!playerOption) {
-				// if (easteregg_counter === 10) {
-				// 	console.clear();
-				// 	console.log('Stop it...');
-				// 	await sleep(5000);
-				// 	easteregg_counter = 0;
-				// }
 				playerOption = input('What will you do?: ');
 				if (!['1', '2'].includes(playerOption)) {
 					playerOption = '';
-					//easteregg_counter += 1;
 					continue;
 				}
 				console.clear();
+				
 				// UPDATE DATA BASED ON PLAYEROPTION
 				switch (playerOption) {
 					case '1':

@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "name": "Coin",
+        "description": "A shiny coin",
+        "effect": 0,
+        "quantity": 1
+    },
+    {
+        "id": 2,
+        "name": "Small health potion",
+        "description": "This potion is made from an unknown fruit, but it heals slightly",
+        "effect": 10,
+        "quantity": 1
+    },
+    {
+        "id": 3,
+        "name": "Medium health potion",
+        "description": "This potion is produced by an alchemist using standardized methods.",
+        "effect": 25,
+        "quantity": 1
+    },
+    {
+        "id": 4,
+        "name": "Big health potion",
+        "description": "This potion is crafted by renowned alchemists or dropped from bosses",
+        "effect": 50,
+        "quantity": 1
+    }
+]

@@ -18,10 +18,12 @@ type Char = {
 type MonsterAndFloor = Char[][];
 
 type Item = {
+	id: number;
 	name: string;
 	description: string;
-	effect?: number;
+	effect: number;
 	quantity: number;
+	rarity: number;
 };
 
 type Gamemode = 'default' | 'enhanced';
