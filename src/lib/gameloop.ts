@@ -5,7 +5,7 @@ import * as fs from 'fs';
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
 	let currentGameData: SaveType = structuredClone(gameData);
-	let currentFloor: number = 0;
+	let currentFloor: number = currentGameData.current_floor;
 	let turn: TurnType = 'player';
 	let traps: TrapType[] = JSON.parse(
 		fs.readFileSync('./data/traps.json', 'utf-8'),
@@ -65,6 +65,7 @@ async function runGame(gameData: SaveType) {
 			player_lvl: currentGameData.player_lvl,
 			playerObj: currentGameData.player,
 			trapsObj: traps,
+			gamedata: currentGameData,
 		});
 		currentFloor = playerstats[0]
 		currentGameData.player_exp = playerstats[1],

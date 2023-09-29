@@ -243,6 +243,7 @@ function displayLastmessageLevelingSpecialRoom({
 	playerObj,
 	trapsObj,
 	inventoryObj,
+	gamedata,
 }: {
 	monster_current_floor_length: number;
 	current_floor: number;
@@ -253,6 +254,7 @@ function displayLastmessageLevelingSpecialRoom({
 	playerObj: Char;
 	trapsObj: TrapType[];
 	inventoryObj: Item[];
+	gamedata: SaveType;
 }): number[] {
 	if (monster_current_floor_length === 0) {
 		if (current_floor === floor - 1) {
@@ -411,9 +413,9 @@ function displayLastmessageLevelingSpecialRoom({
 			`You defeated the current floor, you enter floor ${current_floor + 2}`,
 		);
 		press_to_continue();
-		return [(current_floor += 1), player_exp, player_lvl];
+		return [(gamedata.current_floor += 1), player_exp, player_lvl];
 	}
-	return [current_floor, player_exp, player_lvl];
+	return [gamedata.current_floor, player_exp, player_lvl];
 }
 
 export {

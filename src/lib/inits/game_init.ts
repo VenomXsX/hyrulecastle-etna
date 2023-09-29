@@ -122,6 +122,7 @@ function gameInit(mode: Gamemode): SaveType {
 		difficulty: player_difficulty,
 		player_lvl: 1,
 		player_exp: 0,
+		current_floor: 0
 	};
 }
 export default gameInit;
