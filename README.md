@@ -170,3 +170,8 @@ Enter your action:
 ```
 
 > filter inv ok display to not show qty of 0
+
+.
+|_ atk > physics or spells
+|_ items > [items] with exit inv
+|_ save
