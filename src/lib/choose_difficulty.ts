@@ -1,9 +1,10 @@
+import { Difficulty } from '../types/type';
 import color from '../utils/color';
 import { input } from '../utils/helper';
 
-function chooseDifficulty() {
+function chooseDifficulty(): Difficulty {
 	console.clear();
-	let chosen_difficulty: string = '';
+	let chosen_difficulty: Difficulty = 'normal';
 	console.log(
 		`======[ ${color('Welcome to the Hyrule Castle', 'green')} ]======\n`,
 	);
@@ -16,15 +17,11 @@ function chooseDifficulty() {
 	console.log(`   3. Insane. Monsters multiplier ${color('x2.0', 'red')}`);
 	console.log('');
 
-	const valid_options: string[] = ['normal', 'difficult', 'insane'];
+	const valid_options: Difficulty[] = ['normal', 'difficult', 'insane'];
 	while (true) {
 		chosen_difficulty = input(
 			'Which diffculty do you want to play at? ',
-		).toLowerCase();
-		if (chosen_difficulty === '') {
-			chosen_difficulty = 'normal';
-			break;
-		}
+		).toLowerCase() as Difficulty;
 		if (isNaN(Number(chosen_difficulty))) {
 			if (valid_options.includes(chosen_difficulty)) break;
 		}
