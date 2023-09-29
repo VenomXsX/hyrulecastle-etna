@@ -11,6 +11,16 @@ const input = (message: string | undefined) => rl.question(message);
 const getJsonFromFile = <T>(path: string): T =>
 	JSON.parse(fs.readFileSync(path, 'utf-8'));
 
+const handleEvent = (event: NodeJS.ReadStream, state: 'on' | 'off') => {
+	if (state === 'on') {
+		event.setRawMode(true);
+		event.resume();
+	} else {
+		event.setRawMode(false);
+		event.pause();
+	}
+};
+
 export {
 	sleep,
 	press_to_continue,
@@ -18,4 +28,5 @@ export {
 	_debug,
 	input,
 	getJsonFromFile,
+	handleEvent,
 };
