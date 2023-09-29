@@ -34,11 +34,17 @@ async function runGame(gameData: SaveType) {
 			}/${floor} | Gamemode [${color(
 				gamemode,
 				'yellow',
-			)}] | Difficulty [${color(
-				difficulty,
-				'magenta',
-			)}] | Player level ${player_lvl} [${player_exp}/30 EXP to next level] ===`,
+			)}] | Difficulty [${color(difficulty, 'magenta')}] ===`,
 		);
+
+		if (gamemode === 'enhanced')
+			console.log(
+				`Your level: ${color(
+					player_lvl.toString(),
+					'white',
+				)} [${player_exp}/30 EXP to next level]`,
+			);
+
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
 			`HP : --==[${color(
@@ -59,6 +65,7 @@ async function runGame(gameData: SaveType) {
 			}/${gameData.monsters[currentFloor][0].hp}`,
 		);
 		console.log('-'.repeat(121));
+		console.log('');
 
 		// BATTLE OPTION
 		let playerOption: string = '';
@@ -212,29 +219,22 @@ async function runGame(gameData: SaveType) {
 					luck: 0,
 				};
 				//for (let i = 0; i < 4; i += 1) {
-					player = Object.keys(player).reduce(
-						(acc: Partial<Char>, current): Partial<Char> => {
-							if (
-								[
-									'hp',
-									'mp',
-									'str',
-									'int',
-									'def',
-									'res',
-									'spd',
-									'luck',
-								].includes(current)
-							) {
-								if (Math.floor(Math.random() * 2)) {
-									player_stats_diff[current] += 2;
-									return { ...player, [current]: (player[current] += 2) };
-								}
+				player = Object.keys(player).reduce(
+					(acc: Partial<Char>, current): Partial<Char> => {
+						if (
+							['hp', 'mp', 'str', 'int', 'def', 'res', 'spd', 'luck'].includes(
+								current,
+							)
+						) {
+							if (Math.floor(Math.random() * 2)) {
+								player_stats_diff[current] += 2;
+								return { ...player, [current]: (player[current] += 2) };
 							}
-							return { ...acc, [current]: player[current] };
-						},
-						{},
-					) as Char & { max_hp: number };
+						}
+						return { ...acc, [current]: player[current] };
+					},
+					{},
+				) as Char & { max_hp: number };
 				//}
 				for (const attr of Object.keys(player)) {
 					if (
@@ -244,13 +244,13 @@ async function runGame(gameData: SaveType) {
 					) {
 						console.log(
 							`${attr.toUpperCase()}: ${player[attr]} ${color(
-								('+'+player_stats_diff[attr].toString()),
+								'+' + player_stats_diff[attr].toString(),
 								player_stats_diff[attr] !== 0 ? 'white' : undefined,
 							)}`,
 						);
 					}
-				};
-				press_to_continue()
+				}
+				press_to_continue();
 			}
 
 			currentFloor += 1;
