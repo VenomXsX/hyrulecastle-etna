@@ -9,7 +9,7 @@ async function main() {
 
 	while (true) {
 		const menuInput = await createMenu(welcomeMessage, { min: 0, max: 3 });
-		
+
 		switch (menuInput) {
 			case 0:
 				process.exit(0);
@@ -20,6 +20,7 @@ async function main() {
 				runGame(gameInit('enhanced'));
 				break;
 			case 3:
+				if (!fs.existsSync('./.savegame.json')) break;
 				runGame(JSON.parse(fs.readFileSync('./.savegame.json', 'utf-8')));
 			default:
 				break;
