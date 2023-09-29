@@ -2,29 +2,49 @@
     {
         "id": 1,
         "name": "Coin",
-        "description": "A shiny coin",
+        "description": "A shiny coin.",
         "effect": 0,
-        "quantity": 1
+        "quantity": 12,
+        "rarity": 1
     },
     {
         "id": 2,
-        "name": "Small health potion",
-        "description": "This potion is made from an unknown fruit, but it heals slightly",
-        "effect": 10,
-        "quantity": 1
+        "name": "Low-level potion",
+        "description": "This potion is made from an unknown fruit, but it heals slightly.",
+        "effect": 0,
+        "quantity": 0,
+        "rarity": 1
     },
     {
         "id": 3,
-        "name": "Medium health potion",
+        "name": "Potion",
         "description": "This potion is produced by an alchemist using standardized methods.",
         "effect": 25,
-        "quantity": 1
+        "quantity": 0,
+        "rarity": 2
     },
     {
         "id": 4,
-        "name": "Big health potion",
-        "description": "This potion is crafted by renowned alchemists or dropped from bosses",
+        "name": "Good potion",
+        "description": "This potion is crafted by renowned alchemists.",
+        "effect": 35,
+        "quantity": 0,
+        "rarity": 3
+    },
+    {
+        "id": 5,
+        "name": "High-level potion",
+        "description": "This potion is crafted by legendary alchemists and can be dropped by bosses.",
         "effect": 50,
-        "quantity": 1
+        "quantity": 0,
+        "rarity": 4
+    },
+    {
+        "id": 6,
+        "name": "Holy potion",
+        "description": "A potion that cures all maladies.",
+        "effect": 999,
+        "quantity": 0,
+        "rarity": 5
     }
 ]

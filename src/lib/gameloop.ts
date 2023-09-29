@@ -89,7 +89,7 @@ async function runGame(gameData: SaveType) {
 					case '1':
 						// TODO: calculating player damage modifier & monster dmg mod
 						let player_dmg: number = player.str;
-						let crit: boolean = Math.random() <= 0.15;
+						let crit: boolean = Math.random() <= player.luck / 100;
 						if (crit) player_dmg *= 2;
 						player_dmg =
 							player_dmg - (player_dmg * monsters[currentFloor][0].def) / 100; // using only physical def so no res
@@ -151,7 +151,7 @@ async function runGame(gameData: SaveType) {
 			press_to_continue();
 
 			let monster_dmg = monsters[currentFloor][0].str;
-			let crit: boolean = Math.random() <= 0.15;
+			let crit: boolean = Math.random() <= monsters[currentFloor][0].luck / 100;
 			if (crit) monster_dmg *= 2;
 			monster_dmg = monster_dmg - (monster_dmg * player.def) / 100;
 			monster_dmg = Math.floor(monster_dmg);
