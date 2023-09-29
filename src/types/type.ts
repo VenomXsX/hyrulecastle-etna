@@ -32,6 +32,8 @@ type SaveType = {
 	monsters: MonsterAndFloor;
 	inventory: Item[];
 	difficulty: string;
+	player_lvl: number;
+	player_exp: number;
 };
 
 type TurnType = 'player' | 'monster';

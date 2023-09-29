@@ -108,6 +108,8 @@ function gameInit(mode: Gamemode): SaveType {
 		monsters: monstersWithFloor,
 		inventory: [],
 		difficulty: player_difficulty,
+		player_lvl: 1,
+		player_exp: 0,
 	};
 }
 export default gameInit;

@@ -39,9 +39,9 @@ function characterSelection(id?: number) {
 			)})\n`,
 		);
 		console.log('');
-		console.log(color(`Enter 'random' to play as a random character`, 'yellow'));
 	});
 	console.log('');
+	console.log(color(`Enter 'random' to play as a random character`, 'yellow'));
 	let userInput = '';
 	while (true) {
 		userInput = strCapitalize(
