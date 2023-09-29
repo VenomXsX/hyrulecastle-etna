@@ -3,12 +3,12 @@ import createMenu from '../create_menu';
 
 export const testLoop = async () => {
 	while (true) {
-		const menu2 = await createMenu(testMenu, { min: 0, max: 2 });
-		switch (menu2) {
+		const menuInput = await createMenu(testMenu, { min: 0, max: 2 });
+		switch (menuInput) {
 			case 0:
 				return;
 			case 1:
-				console.log('You choose ' + menu2);
+				console.log('You choose ' + menuInput);
 				break;
 
 			default:
