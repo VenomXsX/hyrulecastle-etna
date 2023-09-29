@@ -8,6 +8,7 @@ async function main() {
 
 	while (true) {
 		const menuInput = await createMenu(welcomeMessage, { min: 0, max: 2 });
+		
 		switch (menuInput) {
 			case 0:
 				process.exit(0);

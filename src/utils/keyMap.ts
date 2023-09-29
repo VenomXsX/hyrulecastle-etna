@@ -5,6 +5,9 @@ export const keyMap = {
 	right: '1b5b43', // [ArrowRight]
 	enter: '0d', // [Enter]
 	exit: '03', // [Ctrl + C]
+	one: "31", // 1
+	two: "32", // 2
+	zero: "30", // 0
 	'': '', // type error handle...
 };
 

@@ -63,7 +63,7 @@ async function runGame(gameData: SaveType) {
 		gameOver = returnState[0];
 
 		// LAST MESSAGE & LEVELING & SPECIAL ROOM
-		currentFloor = glfunc.displayLastmessageLevelingSpecialRoom({
+		let playerstats: number[] = glfunc.displayLastmessageLevelingSpecialRoom({
 			monster_current_floor_length: monsters[currentFloor].length,
 			current_floor: currentFloor,
 			floor: floor,
@@ -74,6 +74,10 @@ async function runGame(gameData: SaveType) {
 			playerObj: player,
 			trapsObj: traps,
 		});
+		currentFloor = playerstats[0]
+		player_exp = playerstats[1],
+		player_lvl = playerstats[2]
+		if (player_exp >= 30) player_exp %= 30;
 	}
 }
 export default runGame;

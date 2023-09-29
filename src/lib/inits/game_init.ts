@@ -22,12 +22,11 @@ function getModifierForMobs(
 	multiplier: number,
 ) {
 	const monster = getMobWithProbability(monsters);
+	const mob =
+		mode === 'enhanced' ? getMobWithProbability(monsters) : monsters[11];
 	const modifiedMonster = Object.keys(
 		mode === 'enhanced' ? monster : monsters[11],
 	).reduce((acc: Partial<Char>, current): Partial<Char> => {
-		const mob =
-			mode === 'enhanced' ? getMobWithProbability(monsters) : monsters[11];
-
 		if (
 			['hp', 'mp', 'str', 'int', 'def', 'res', 'spd', 'luck'].includes(current)
 		) {
@@ -52,8 +51,10 @@ function gameInit(mode: Gamemode): SaveType {
 	switch (player_difficulty) {
 		case 'difficult':
 			multiplier = 1.5;
+			break;
 		case 'insane':
 			multiplier = 2;
+			break;
 	}
 
 	const players = getJsonFromFile<Char[]>('./data/players.json');
@@ -63,7 +64,7 @@ function gameInit(mode: Gamemode): SaveType {
 	const classes = getJsonFromFile<Class[]>('./data/classes.json');
 	const spells = getJsonFromFile<Spell[]>('./data/spells.json');
 
-	_debug(searchObjById(monsters, 3));
+	//_debug(searchObjById(monsters, 3));
 
 	const boss = getMobWithProbability(bosses);
 	const modifiedBoss = Object.keys(boss).reduce(
@@ -101,14 +102,14 @@ function gameInit(mode: Gamemode): SaveType {
 	}
 
 	//FIXME: [DEBUG]
-	// _debug({
-	// 	player,
-	// 	floor,
-	// 	gamemode: mode,
-	// 	monsters: monstersWithFloor,
-	// 	inventory: [],
-	// 	difficulty: player_difficulty,
-	// });
+	_debug({
+		player,
+		floor,
+		gamemode: mode,
+		monsters: monstersWithFloor,
+		inventory: [],
+		difficulty: player_difficulty,
+	});
 
 	return {
 		player,

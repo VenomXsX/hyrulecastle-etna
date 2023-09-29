@@ -19,14 +19,14 @@ function chooseDifficulty(): Difficulty {
 
 	const valid_options: Difficulty[] = ['normal', 'difficult', 'insane'];
 	while (true) {
-		chosen_difficulty = input(
+		let userInput = input(
 			'Which diffculty do you want to play at? ',
 		).toLowerCase() as Difficulty;
-		if (isNaN(Number(chosen_difficulty))) {
-			if (valid_options.includes(chosen_difficulty)) break;
+		if (isNaN(Number(userInput))) {
+			if (valid_options.includes(userInput)) break;
 		}
-		if ([1, 2, 3].includes(Number(chosen_difficulty))) {
-			chosen_difficulty = valid_options[Number(chosen_difficulty) - 1];
+		if ([1, 2, 3].includes(Number(userInput))) {
+			chosen_difficulty = valid_options[Number(userInput) - 1];
 			break;
 		}
 	}

@@ -38,6 +38,15 @@ const createMenu = async (
 			case keyMap.enter:
 				menuInput = 'enter';
 				break;
+			case keyMap.zero:
+				menuInput = 'zero';
+				break;
+			case keyMap.one:
+				menuInput = 'one';
+				break;
+			case keyMap.two:
+				menuInput = 'two';
+				break;
 			default:
 		}
 	});
@@ -60,6 +69,15 @@ const createMenu = async (
 				menuIndex = menuIndex + 1;
 				if (menuIndex > minMax.max) menuIndex = minMax.min;
 				break;
+			case "zero":
+				handleEvent(eventRef, 'off');
+				return 0;
+			case "one":
+				handleEvent(eventRef, 'off');
+				return 1;
+			case "two":
+				handleEvent(eventRef, 'off');
+				return 2;
 			case 'enter':
 				handleEvent(eventRef, 'off');
 				return menuIndex;

@@ -209,6 +209,7 @@ function displayBattlePhase({
 		console.log(
 			`\nYou died on ${color('floor ' + (current_floor + 1), 'red')}`,
 		);
+        press_to_continue();
 		return [true, turn];
 	}
 
@@ -241,7 +242,7 @@ function displayLastmessageLevelingSpecialRoom({
 	playerObj: Char;
 	trapsObj: TrapType[];
 	inventoryObj: Item[];
-}): number {
+}): number[] {
 	if (monster_current_floor_length === 0) {
 		if (current_floor === floor - 1) {
 			console.log(color(`You defeated all the monsters, you won!`, 'green'));
@@ -398,9 +399,9 @@ function displayLastmessageLevelingSpecialRoom({
 		console.log(
 			`You defeated the current floor, you enter floor ${current_floor + 2}`,
 		);
-		return (current_floor += 1);
+		return [(current_floor += 1), player_exp, player_lvl];
 	}
-	return current_floor;
+	return [current_floor, player_exp, player_lvl];
 }
 
 export {
