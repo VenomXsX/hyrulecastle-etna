@@ -83,17 +83,28 @@ async function runGame(gameData: SaveType) {
 					continue;
 				}
 				console.clear();
-				
+
 				// UPDATE DATA BASED ON PLAYEROPTION
 				switch (playerOption) {
 					case '1':
+						// TODO: calculating player damage modifier & monster dmg mod
+						let player_dmg: number = player.str;
+						let crit: boolean = Math.random() <= 0.15;
+						if (crit) player_dmg *= 2;
+						player_dmg =
+							player_dmg - (player_dmg * monsters[currentFloor][0].def) / 100; // using only physical def so no res
+						player_dmg = Math.floor(player_dmg);
+						if (crit) {
+							console.log(`You landed a ${color('Critical Hit!', 'yellow')}`);
+						}
+
 						console.log(
-							`You chose to ${color('attack', 'white')}, and dealt ${color(
-								player.str.toString(),
+							`You dealt ${color(
+								player_dmg.toString(),
 								'yellow',
 							)} ATK to ${color(monsters[currentFloor][0].name, 'red')}.`,
 						);
-						monsters[currentFloor][0].hp -= player.str;
+						monsters[currentFloor][0].hp -= player_dmg;
 						break;
 					case '2':
 						const heal_amount: number = Math.round(player.max_hp / 2);
@@ -138,16 +149,29 @@ async function runGame(gameData: SaveType) {
 				)} is thinking about his attack...`,
 			);
 			press_to_continue();
-			player.hp -= monsters[currentFloor][0].str;
+
+			let monster_dmg = monsters[currentFloor][0].str;
+			let crit: boolean = Math.random() <= 0.15;
+			if (crit) monster_dmg *= 2;
+			monster_dmg = monster_dmg - (monster_dmg * player.def) / 100;
+			monster_dmg = Math.floor(monster_dmg);
+
+			player.hp -= monster_dmg;
 			console.clear();
+
+			if (crit) {
+				console.log(
+					`${color(monsters[currentFloor][0].name, 'red')} landed a ${color(
+						'Critical Hit',
+						'yellow',
+					)} on you.`,
+				);
+			}
 			console.log(
 				`${color(
 					monsters[currentFloor][0].name,
 					'red',
-				)} attacked you and you lost ${color(
-					monsters[currentFloor][0].str.toString(),
-					'yellow',
-				)} HP.`,
+				)} attacked you, you lost ${color(monster_dmg, 'yellow')} HP`,
 			);
 			turn = 'player';
 			press_to_continue();
@@ -173,78 +197,88 @@ async function runGame(gameData: SaveType) {
 				press_to_continue();
 			}
 
+			// TODO: PLAYER LEVEL MOD
 			// if the defeated floor monster was a boss
-			if (currentFloor % 10 === 0) {
-				console.clear();
-				console.log(`You gained ${color('10', 'green')} EXP!`);
-				player_exp += 10;
-				press_to_continue();
-			} else {
-				console.clear();
-				console.log(`You gained ${color('5', 'green')} EXP!`);
-				player_exp += 5;
-				press_to_continue();
-			}
+			if (gamemode === 'enhanced') {
+				if (currentFloor % 10 === 0 && currentFloor !== 0) {
+					console.clear();
+					console.log(`You gained ${color('10', 'green')} EXP!`);
+					player_exp += 10;
+					press_to_continue();
+				} else {
+					console.clear();
+					console.log(`You gained ${color('5', 'green')} EXP!`);
+					player_exp += 5;
+					press_to_continue();
+				}
 
-			// check leveling
-			const current_lvl: number = player_lvl;
-			const lvl_after_exp_add: number = (player_lvl += Math.round(
-				player_exp / 30,
-			));
-			console.log('');
-			if (current_lvl < lvl_after_exp_add) {
-				player_lvl = lvl_after_exp_add;
-				console.log(
-					`Congratulations you gained a level, you are now level ${color(
-						player_lvl,
-						'white',
-					)}`,
-				);
-				const player_stats_diff: {
-					[key: string]: number;
-				} = {
-					hp: 0,
-					mp: 0,
-					str: 0,
-					int: 0,
-					def: 0,
-					res: 0,
-					spd: 0,
-					luck: 0,
-				};
-				//for (let i = 0; i < 4; i += 1) {
-				player = Object.keys(player).reduce(
-					(acc: Partial<Char>, current): Partial<Char> => {
+				// check leveling
+				const current_lvl: number = player_lvl;
+				const lvl_after_exp_add: number = (player_lvl += Math.floor(
+					player_exp / 30,
+				));
+				console.log('');
+				if (current_lvl < lvl_after_exp_add) {
+					player_lvl = lvl_after_exp_add;
+					console.log(
+						`Congratulations you gained a level, you are now level ${color(
+							player_lvl,
+							'white',
+						)}`,
+					);
+					const player_stats_diff: {
+						[key: string]: number;
+					} = {
+						hp: 0,
+						mp: 0,
+						str: 0,
+						int: 0,
+						def: 0,
+						res: 0,
+						spd: 0,
+						luck: 0,
+					};
+					//for (let i = 0; i < 4; i += 1) {
+					player = Object.keys(player).reduce(
+						(acc: Partial<Char>, current): Partial<Char> => {
+							if (
+								[
+									'hp',
+									'mp',
+									'str',
+									'int',
+									'def',
+									'res',
+									'spd',
+									'luck',
+								].includes(current)
+							) {
+								if (Math.floor(Math.random() * 2)) {
+									player_stats_diff[current] += 2;
+									return { ...player, [current]: (player[current] += 2) };
+								}
+							}
+							return { ...acc, [current]: player[current] };
+						},
+						{},
+					) as Char & { max_hp: number };
+					//}
+					for (const attr of Object.keys(player)) {
 						if (
 							['hp', 'mp', 'str', 'int', 'def', 'res', 'spd', 'luck'].includes(
-								current,
+								attr,
 							)
 						) {
-							if (Math.floor(Math.random() * 2)) {
-								player_stats_diff[current] += 2;
-								return { ...player, [current]: (player[current] += 2) };
-							}
+							console.log(
+								`${attr.toUpperCase()}: ${player[attr]} ${color(
+									'+' + player_stats_diff[attr].toString(),
+									player_stats_diff[attr] !== 0 ? 'white' : undefined,
+								)}`,
+							);
 						}
-						return { ...acc, [current]: player[current] };
-					},
-					{},
-				) as Char & { max_hp: number };
-				//}
-				for (const attr of Object.keys(player)) {
-					if (
-						['hp', 'mp', 'str', 'int', 'def', 'res', 'spd', 'luck'].includes(
-							attr,
-						)
-					) {
-						console.log(
-							`${attr.toUpperCase()}: ${player[attr]} ${color(
-								'+' + player_stats_diff[attr].toString(),
-								player_stats_diff[attr] !== 0 ? 'white' : undefined,
-							)}`,
-						);
 					}
+					press_to_continue();
 				}
-				press_to_continue();
 			}
 
 			currentFloor += 1;
