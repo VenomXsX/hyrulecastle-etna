@@ -1,11 +1,18 @@
-import { SaveType, TurnType } from '../types/type';
+import { SaveType, TurnType, Char } from '../types/type';
 import color from '../utils/color';
 import { sleep, press_to_continue, input } from '../utils/helper';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
-	let { player, monsters, floor, gamemode, difficulty } =
-		structuredClone(gameData);
+	let {
+		player,
+		monsters,
+		floor,
+		gamemode,
+		difficulty,
+		player_lvl,
+		player_exp,
+	} = structuredClone(gameData);
 	let currentFloor: number = 0;
 	let turn: TurnType = 'player';
 	console.clear();
@@ -27,7 +34,10 @@ async function runGame(gameData: SaveType) {
 			}/${floor} | Gamemode [${color(
 				gamemode,
 				'yellow',
-			)}] | Difficulty [${color(difficulty, 'magenta')}] ===`,
+			)}] | Difficulty [${color(
+				difficulty,
+				'magenta',
+			)}] | Player level ${player_lvl} [${player_exp}/30 EXP to next level] ===`,
 		);
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
@@ -159,8 +169,90 @@ async function runGame(gameData: SaveType) {
 		if (monsters[currentFloor].length === 0) {
 			if (currentFloor === floor - 1) {
 				console.log(color(`You defeated all the monsters, you won!`, 'green'));
-				break;
+				press_to_continue();
 			}
+
+			// if the defeated floor monster was a boss
+			if (currentFloor % 10 === 0) {
+				console.clear();
+				console.log(`You gained ${color('10', 'green')} EXP!`);
+				player_exp += 10;
+				press_to_continue();
+			} else {
+				console.clear();
+				console.log(`You gained ${color('5', 'green')} EXP!`);
+				player_exp += 5;
+				press_to_continue();
+			}
+
+			// check leveling
+			const current_lvl: number = player_lvl;
+			const lvl_after_exp_add: number = (player_lvl += Math.round(
+				player_exp / 30,
+			));
+			console.log('');
+			if (current_lvl < lvl_after_exp_add) {
+				player_lvl = lvl_after_exp_add;
+				console.log(
+					`Congratulations you gained a level, you are now level ${color(
+						player_lvl,
+						'white',
+					)}`,
+				);
+				const player_stats_diff: {
+					[key: string]: number;
+				} = {
+					hp: 0,
+					mp: 0,
+					str: 0,
+					int: 0,
+					def: 0,
+					res: 0,
+					spd: 0,
+					luck: 0,
+				};
+				//for (let i = 0; i < 4; i += 1) {
+					player = Object.keys(player).reduce(
+						(acc: Partial<Char>, current): Partial<Char> => {
+							if (
+								[
+									'hp',
+									'mp',
+									'str',
+									'int',
+									'def',
+									'res',
+									'spd',
+									'luck',
+								].includes(current)
+							) {
+								if (Math.floor(Math.random() * 2)) {
+									player_stats_diff[current] += 2;
+									return { ...player, [current]: (player[current] += 2) };
+								}
+							}
+							return { ...acc, [current]: player[current] };
+						},
+						{},
+					) as Char & { max_hp: number };
+				//}
+				for (const attr of Object.keys(player)) {
+					if (
+						['hp', 'mp', 'str', 'int', 'def', 'res', 'spd', 'luck'].includes(
+							attr,
+						)
+					) {
+						console.log(
+							`${attr.toUpperCase()}: ${player[attr]} ${color(
+								('+'+player_stats_diff[attr].toString()),
+								player_stats_diff[attr] !== 0 ? 'white' : undefined,
+							)}`,
+						);
+					}
+				};
+				press_to_continue()
+			}
+
 			currentFloor += 1;
 			console.log(
 				`You defeated the current floor, you enter floor ${currentFloor + 1}`,
