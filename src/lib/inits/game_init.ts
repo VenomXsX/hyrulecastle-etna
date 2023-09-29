@@ -11,6 +11,7 @@ import getMobWithProbability from './get_mob_with_probability';
 import { _debug, getJsonFromFile } from '../../utils/helper';
 import chooseDifficulty from '../choose_difficulty';
 import chooseFloor from './choose_floor';
+import { searchObjById } from '../handle_object';
 
 function getModifierForMobs(
 	monsters: Char[],
@@ -55,6 +56,8 @@ function gameInit(mode: Gamemode): SaveType {
 	const players = getJsonFromFile<Char[]>('./data/players.json');
 	const monsters = getJsonFromFile<Char[]>('./data/enemies.json');
 	const bosses = getJsonFromFile<Char[]>('./data/bosses.json');
+
+	_debug(searchObjById(monsters, 3));
 
 	const boss = getMobWithProbability(bosses);
 	const modifiedBoss = Object.keys(boss).reduce(
