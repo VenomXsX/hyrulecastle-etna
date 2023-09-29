@@ -49,6 +49,8 @@ async function runGame(gameData: SaveType) {
 			monster_current_floor: currentGameData.monsters[currentFloor],
 			playerObj: currentGameData.player,
 			gamedata: currentGameData,
+			originalgamedata: gameData,
+			gamemode: gameData.gamemode,
 		});
 
 		turn = returnState[1];

@@ -94,23 +94,37 @@ function displayBattlePhase({
 	monster_current_floor,
 	current_floor,
 	gamedata,
+	originalgamedata,
+	gamemode,
 }: {
 	turn: TurnType;
 	playerObj: Char;
 	monster_current_floor: Char[];
 	current_floor: number;
-	gamedata: SaveType
+	gamedata: SaveType,
+	originalgamedata: SaveType,
+	gamemode: Gamemode
 }): [boolean, TurnType] {
 	let playerOption: string = '';
-
+	
+	let protected_state: boolean = false;
+	let flee_state: boolean = false;
 	if (turn === 'player') {
 		console.log('===== Options =====');
-		console.log('1. Attack   | 2. Heal  | 3. Save and quit');
+		if(gamemode === 'enhanced') {
+			console.log('1. Attack   | 2. Heal   | 3. Protect   | 4. Flee the tower   | 5. Save and quit');
+		} else {
+			console.log('1. Attack   | 2. Heal   | 3. Save and quit');
+		}
 
 		// GET PLAYER OPTION
 		while (!playerOption) {
 			playerOption = input('What will you do?: ');
-			if (!['1', '2', '3'].includes(playerOption)) {
+			if (!['1', '2', '3', '4', '5'].includes(playerOption) && gamemode === 'enhanced') {
+				playerOption = '';
+				continue;
+			}
+			if (!['1', '2', '3'].includes(playerOption) && gamemode === 'default') {
 				playerOption = '';
 				continue;
 			}
@@ -165,15 +179,38 @@ function displayBattlePhase({
 						break;
 					}
 				case '3':
-					const SaveGameFile: SaveType = structuredClone(gamedata);
+					if(gamemode === 'enhanced') {
+						protected_state = true;
+						console.log(`You chose to brace yourself for the next attack, you only receive ${color('half', 'green')} the damage`);
+						break;
+					}
 					console.clear();
 					console.log('Saving...');
 					fs.writeFileSync('./.savegame.json', JSON.stringify(gamedata, null, 2));
 					console.log('Saved');
 					process.exit(0);
+				case '4':
+					if (gamemode === 'enhanced') {
+						console.log(`You decided to flee the tower, you will start again with some ${color('penalties', 'red')}...`);
+						flee_state = true;
+						gamedata = originalgamedata;
+						gamedata.player.hp *= 0.1;
+						break;
+					}
+					continue;
+				case '5':
+					if (gamemode === 'enhanced') {
+						const SaveGameFile: SaveType = structuredClone(gamedata);
+						console.clear();
+						console.log('Saving...');
+						fs.writeFileSync('./.savegame.json', JSON.stringify(gamedata, null, 2));
+						console.log('Saved');
+						process.exit(0);
+					}
+					continue;
 			}
 		}
-		if (monster_current_floor[0].hp <= 0) {
+		if (monster_current_floor[0].hp <= 0 || flee_state) {
 			turn = 'player';
 		} else {
 			turn = 'monster';
@@ -194,6 +231,9 @@ function displayBattlePhase({
 		if (crit) monster_dmg *= 2;
 		monster_dmg = monster_dmg - (monster_dmg * playerObj.def) / 100;
 		monster_dmg = Math.floor(monster_dmg);
+		if (protected_state) {
+			monster_dmg *= 0.5;
+		}
 
 		playerObj.hp -= monster_dmg;
 		console.clear();
