@@ -10,7 +10,7 @@ import {
 } from '../../types/type';
 import createChar from '../create_char';
 import characterSelection from '../character_selection';
-import getMobWithProbability from './get_mob_with_probability';
+import getMobWithProbability from './get_entities_by_rarity';
 import { _debug, getJsonFromFile } from '../../utils/helper';
 import chooseDifficulty from '../choose_difficulty';
 import chooseFloor from './choose_floor';

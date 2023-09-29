@@ -1,6 +1,6 @@
 import { Char } from '../../types/type';
 
-function getMobWithProbability(mob: Char[]) {
+function getEntitiesByRarity(mob: Char[]) {
 	const highestRarity = mob.reduce(
 		(acc, item) => (acc < item.rarity ? item.rarity : acc),
 		0,
@@ -15,4 +15,4 @@ function getMobWithProbability(mob: Char[]) {
 	return filteredMob[Math.floor(Math.random() * filteredMob.length)];
 }
 
-export default getMobWithProbability;
+export default getEntitiesByRarity;

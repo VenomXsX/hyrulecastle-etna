@@ -3,7 +3,7 @@ import { Char } from '../types/type';
 import { input, sleep, strCapitalize } from '../utils/helper';
 import * as fs from 'fs';
 import { press_to_continue } from '../utils/helper';
-import getMobWithProbability from './inits/get_mob_with_probability';
+import getMobWithProbability from './inits/get_entities_by_rarity';
 
 function characterSelection(id?: number) {
 	const characters: Char[] = JSON.parse(
