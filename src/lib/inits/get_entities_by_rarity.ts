@@ -1,8 +1,8 @@
 import { Char } from '../../types/type';
 
-function getEntitiesByRarity(mob: Char[]) {
+function getEntitiesByRarity<T>(mob: T[]) {
 	const highestRarity = mob.reduce(
-		(acc, item) => (acc < item.rarity ? item.rarity : acc),
+		(acc, item: any) => (acc < item.rarity ? item.rarity : acc),
 		0,
 	);
 	let rarities: any[] = [];
@@ -11,7 +11,7 @@ function getEntitiesByRarity(mob: Char[]) {
 		for (let j = 0; j < i; j++) rarities.push(highestRarity - i + 1);
 
 	const index = Math.floor(Math.random() * rarities.length);
-	const filteredMob = mob.filter((x) => x.rarity === rarities[index]);
+	const filteredMob = mob.filter((x: any) => x.rarity === rarities[index]);
 	return filteredMob[Math.floor(Math.random() * filteredMob.length)];
 }
 

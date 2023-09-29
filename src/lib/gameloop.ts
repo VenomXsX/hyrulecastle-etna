@@ -1,6 +1,14 @@
-import { SaveType, TurnType, Char } from '../types/type';
+import { SaveType, TurnType, Char, TrapType } from '../types/type';
 import color from '../utils/color';
-import { sleep, press_to_continue, input } from '../utils/helper';
+import {
+	sleep,
+	press_to_continue,
+	input,
+	randomIntFromInterval,
+} from '../utils/helper';
+import { handleQuantity } from './handle_object';
+import getEntitiesByRarity from './inits/get_entities_by_rarity';
+import * as fs from 'fs';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
@@ -12,13 +20,16 @@ async function runGame(gameData: SaveType) {
 		difficulty,
 		player_lvl,
 		player_exp,
+		inventory,
 	} = structuredClone(gameData);
 	let currentFloor: number = 0;
 	let turn: TurnType = 'player';
+	let traps: TrapType[] = JSON.parse(
+		fs.readFileSync('./data/traps.json', 'utf-8'),
+	);
 	console.clear();
 
 	while (true) {
-		// STATS DISPLAY
 		const player_remaining_hp_for_display: number = Math.round(
 			(player.hp / player.max_hp) * 100,
 		);
@@ -26,8 +37,8 @@ async function runGame(gameData: SaveType) {
 			(monsters[currentFloor][0].hp / gameData.monsters[currentFloor][0].hp) *
 				100,
 		);
-
 		console.clear();
+		// STATS DISPLAY
 		console.log(
 			`=== Current battle stats | Floor ${
 				currentFloor + 1
@@ -37,6 +48,7 @@ async function runGame(gameData: SaveType) {
 			)}] | Difficulty [${color(difficulty, 'magenta')}] ===`,
 		);
 
+		// LEVEL INFO
 		if (gamemode === 'enhanced')
 			console.log(
 				`Your level: ${color(
@@ -45,6 +57,7 @@ async function runGame(gameData: SaveType) {
 				)} [${player_exp}/30 EXP to next level]`,
 			);
 
+		// HP BAR
 		console.log(`${color(player.name, 'green')}`);
 		console.log(
 			`HP : --==[${color(
@@ -278,6 +291,80 @@ async function runGame(gameData: SaveType) {
 						}
 					}
 					press_to_continue();
+				}
+			}
+
+			// SPECIAL ROOM
+			if (gamemode === 'enhanced') {
+				let special_room_state: boolean = Math.random() <= 0.35;
+				if (currentFloor + (1 % 10) === 0) {
+					// IF NEXT FLOOR IS BOSS ROOM
+					special_room_state = true;
+				}
+				if (special_room_state) {
+					console.log(
+						color(`==== You've stumbled upon a room... ====`, 'white'),
+					);
+					let roomtype: boolean = Math.random() < 0.9; // true = trap ; false = treasure
+					let room_requirements_state: boolean = false; // if player meets room requirement
+					if (roomtype) {
+						console.log(color('Trap Room', 'yellow'));
+						const trap: TrapType = getEntitiesByRarity(traps);
+
+						// check if requirements are met
+						let room_requirements: string[] = trap.requirement.split('_');
+						room_requirements[0].toLowerCase();
+						if (player[room_requirements[0]] >= Number(room_requirements[1]))
+							room_requirements_state = true;
+					} else {
+						room_requirements_state = true;
+						console.log(color('Treasure Room', 'yellow'));
+					}
+					room_requirements_state
+						? console.log('You meet the requirements to leave this room.')
+						: console.log(
+								'You do not meet the requirements to leave this room.',
+						  );
+					console.log('=== Options ===');
+					room_requirements_state
+						? console.log('1. Leave')
+						: console.log('1. Leave (you will be penalized)');
+					console.log('');
+					let userInput: string = '';
+					while (!userInput) {
+						userInput = input('What do you want to do? ');
+						if (['1', 'leave'].includes(userInput.toLowerCase())) {
+							if (!roomtype) {
+								// if treasure room
+								const coins_gained: number = randomIntFromInterval(3, 5);
+								console.log(
+									`You left the room with ${color(
+										coins_gained + ' coins',
+										'yellow',
+									)}`,
+								);
+								handleQuantity(inventory, 1, 'add', coins_gained);
+								press_to_continue();
+								break;
+							}
+							if (roomtype && room_requirements_state) {
+								// if trap room and requirements met
+								break;
+							}
+							if (roomtype && !room_requirements_state) {
+								// if trap room and requirements not met
+								const percentage_lost: number =
+									randomIntFromInterval(5, 15) / 100;
+								const hp_lost: number = Math.floor(
+									player.max_hp * percentage_lost,
+								);
+								console.log(`You ${color('lost', 'red')} ${hp_lost} HP...`);
+								console.log('');
+								press_to_continue();
+								break;
+							}
+						}
+					}
 				}
 			}
 

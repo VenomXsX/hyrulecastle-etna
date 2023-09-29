@@ -65,6 +65,13 @@ type SaveType = {
 	player_exp: number;
 };
 
+type TrapType = {
+	id: number;
+	name: string;
+	requirement: string,
+	rarity: number
+}
+
 type TurnType = 'player' | 'monster';
 
 type Difficulty = 'normal' | 'difficult' | 'insane';
@@ -79,4 +86,5 @@ export {
 	Difficulty,
 	Item,
 	Spell,
+	TrapType,
 };

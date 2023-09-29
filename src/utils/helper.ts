@@ -2,7 +2,7 @@ import * as rl from 'readline-sync';
 import * as fs from 'fs';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const press_to_continue = () => input('\nPress [ENTER] to continue...');
+const press_to_continue = () => input('Press [ENTER] to continue...');
 const strCapitalize = (str?: string) =>
 	str && str[0] ? str[0].toUpperCase() + str.slice(1) : '';
 const _debug = (data: string | object) =>
@@ -21,6 +21,8 @@ const handleEvent = (event: NodeJS.ReadStream, state: 'on' | 'off') => {
 	}
 };
 
+const randomIntFromInterval = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1) + min)
+
 export {
 	sleep,
 	press_to_continue,
@@ -29,4 +31,5 @@ export {
 	input,
 	getJsonFromFile,
 	handleEvent,
+	randomIntFromInterval,
 };
