@@ -154,3 +154,24 @@ Your actions:
 ------------------------------------------
 Enter your action:
 ```
+
+### items
+```ts
+[
+	{
+		name: "potion"
+		qty: 0
+	},
+	{
+		name: "coin"
+		....
+	}
+]
+```
+
+> filter inv ok display to not show qty of 0
+
+.
+|_ atk > physics or spells
+|_ items > [items] with exit inv
+|_ save

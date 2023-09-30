@@ -1,159 +1,87 @@
-import { SaveType, TurnType } from '../types/type';
-import * as rl from 'readline-sync';
-import color from '../utils/color';
-import { sleep, press_to_continue } from '../utils/helper';
+import { SaveType, TurnType, Char, TrapType } from '../types/type';
+import * as glfunc from '../gameloop_functions/gameloop_functions';
+import * as fs from 'fs';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
-	let { player, monsters, floor, gamemode } = JSON.parse(
-		JSON.stringify(gameData),
-	) as SaveType;
-	let currentFloor: number = 0;
+	let currentGameData: SaveType = structuredClone(gameData);
+	let currentFloor: number = currentGameData.current_floor;
 	let turn: TurnType = 'player';
+	let traps: TrapType[] = JSON.parse(
+		fs.readFileSync('./data/traps.json', 'utf-8'),
+	);
 	console.clear();
 
-	while (true) {
-		// TODO: STATS DISPLAY
+	let gameOver: boolean | undefined = false;
+	let flee_state: boolean = false;
+
+	while (!gameOver) {
 		const player_remaining_hp_for_display: number = Math.round(
-			(player.hp / player.max_hp) * 100,
+			(currentGameData.player.hp / currentGameData.player.max_hp) * 100,
 		);
 		const monster_remaining_hp_for_display: number = Math.round(
-			(monsters[currentFloor][0].hp / gameData.monsters[currentFloor][0].hp) *
+			(currentGameData.monsters[currentFloor][0].hp / gameData.monsters[currentFloor][0].hp) *
 				100,
 		);
-
 		console.clear();
-		console.log(
-			`=== Current battle stats | Floor ${
-				currentFloor + 1
-			} | Gamemode [${gamemode}] ===`,
-		);
-		console.log(`${color(player.name, 'green')}`);
-		console.log(
-			`HP : --==[${color(
-				' '.repeat(player_remaining_hp_for_display),
-				'green',
-				'green',
-			)}${'_'.repeat(100 - player_remaining_hp_for_display)}]==-- ${
-				player.hp
-			}/${player.max_hp}`,
-		);
-		// index 0 parce que c default sinon...
-		console.log(`${color(monsters[currentFloor][0].name, 'red')}`);
-		console.log(
-			`HP : --==[${color(
-				' '.repeat(monster_remaining_hp_for_display),
-				'red',
-				'red',
-			)}${'_'.repeat(100 - monster_remaining_hp_for_display)}]==-- ${
-				monsters[currentFloor][0].hp
-			}/${gameData.monsters[currentFloor][0].hp}`,
-		);
-		console.log('-'.repeat(121));
 
-		// TODO: BATTLE OPTION
-		let playerOption: string = '';
+		// STATS DISPLAY
+		glfunc.displayStats(currentFloor, currentGameData.floor, currentGameData.gamemode, currentGameData.difficulty);
 
-		if (turn === 'player') {
-			console.log('===== Options =====');
-			console.log('1. Attack   | 2. Heal');
+		// LEVEL INFO
+		glfunc.displayLevel(currentGameData.gamemode, currentGameData.player_lvl, currentGameData.player_exp);
 
-			// GET PLAYER OPTION
-			while (!playerOption) {
-				playerOption = rl.question('What will you do?: ');
-				if (!['1', '2'].includes(playerOption)) {
-					playerOption = '';
-					continue;
-				}
-				console.clear();
-				// UPDATE DATA BASED ON PLAYEROPTION
-				switch (playerOption) {
-					case '1':
-						console.log(
-							`You chose to ${color('attack', 'white')}, and dealt ${color(
-								player.str.toString(),
-								'yellow',
-							)} ATK to ${color(monsters[currentFloor][0].name, 'red')}.`,
-						);
-						monsters[currentFloor][0].hp -= player.str;
-						break;
-					case '2':
-						const heal_amount: number = Math.round(player.max_hp / 2);
-						if (player.hp === player.max_hp) {
-							console.log(`You are already on ${color('max HP', 'cyan')}.`);
-							continue;
-						}
-						const remaining_hp_for_healing = player.max_hp - player.hp;
-						if (player.hp < Math.round(player.max_hp / 2)) {
-							player.hp += heal_amount;
-							console.log(
-								`You chose to ${color('heal', 'white')}, you regain ${color(
-									heal_amount.toString(),
-									'green',
-								)} HP.`,
-							);
-							break;
-						} else {
-							player.hp = player.max_hp;
-							console.log(
-								`You chose to ${color('heal', 'white')}, you regain ${color(
-									remaining_hp_for_healing.toString(),
-									'green',
-								)} HP.`,
-							);
-							break;
-						}
-				}
-			}
-			if (monsters[currentFloor][0].hp <= 0) {
-				turn = 'player';
-			} else {
-				turn = 'monster';
-			}
-			press_to_continue();
-		} else {
-			console.clear();
-			console.log(
-				`${color(
-					monsters[currentFloor][0].name,
-					'red',
-				)} is thinking about his attack.`,
-			);
-			press_to_continue();
-			player.hp -= monsters[currentFloor][0].str;
-			console.clear();
-			console.log(
-				`${color(
-					monsters[currentFloor][0].name,
-					'red',
-				)} attacked you and you lost ${color(
-					monsters[currentFloor][0].str.toString(),
-					'yellow',
-				)} HP.`,
-			);
-			turn = 'player';
-			press_to_continue();
+		// HP BAR
+		glfunc.displayHPBar({
+			player_name: currentGameData.player.name,
+			player_remaining_hp_for_display: player_remaining_hp_for_display,
+			player_hp: currentGameData.player.hp,
+			player_max_hp: currentGameData.player.max_hp,
+			monster_name: currentGameData.monsters[currentFloor][0].name,
+			monster_hp: currentGameData.monsters[currentFloor][0].hp,
+			monster_max_hp: gameData.monsters[currentFloor][0].hp,
+			monster_remaining_hp_for_display: monster_remaining_hp_for_display,
+		});
+
+		// BATTLE OPTION
+		let returnState: [boolean, TurnType, boolean] = glfunc.displayBattlePhase({
+			turn: turn,
+			current_floor: currentFloor,
+			monster_current_floor: currentGameData.monsters[currentFloor],
+			playerObj: currentGameData.player,
+			gamedata: currentGameData,
+			originalgamedata: gameData,
+			gamemode: gameData.gamemode,
+		});
+
+		flee_state = returnState[2];
+		turn = returnState[1];
+		gameOver = returnState[0];
+
+		if (flee_state) {
+			currentGameData.player.hp *= 0.1;
+			currentFloor = 0;
+			currentGameData.monsters = structuredClone(gameData.monsters);
+			continue;
 		}
 
-		if (player.hp <= 0) {
-			console.log(`\nYou died on ${color('floor '+ currentFloor, 'red')}`);
-			break;
-		}
-
-		if (monsters[currentFloor][0].hp <= 0) {
-			monsters[currentFloor].shift();
-		}
-
-		if (monsters[currentFloor].length === 0) {
-			if (currentFloor === floor - 1) {
-				console.log(`You defeated all the monsters, you won!`);
-				break;
-			}
-			currentFloor += 1;
-			console.log(
-				`You defeated the current floor, you enter floor ${currentFloor + 1}`,
-			);
-		}
+		// LAST MESSAGE & LEVELING & SPECIAL ROOM
+		let playerstats: number[] = glfunc.displayLastmessageLevelingSpecialRoom({
+			monster_current_floor_length: currentGameData.monsters[currentFloor].length,
+			current_floor: currentFloor,
+			floor: currentGameData.floor,
+			gamemode: currentGameData.gamemode,
+			inventoryObj: currentGameData.inventory,
+			player_exp: currentGameData.player_exp,
+			player_lvl: currentGameData.player_lvl,
+			playerObj: currentGameData.player,
+			trapsObj: traps,
+			gamedata: currentGameData,
+		});
+		currentFloor = playerstats[0]
+		currentGameData.player_exp = playerstats[1],
+		currentGameData.player_lvl = playerstats[2]
+		if (currentGameData.player_exp >= 30) currentGameData.player_exp %= 30;
 	}
 }
 export default runGame;

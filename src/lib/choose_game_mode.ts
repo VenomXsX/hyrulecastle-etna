@@ -1,10 +1,10 @@
-import * as rl from 'readline-sync';
 import { Gamemode } from '../types/type';
+import { input } from '../utils/helper';
 
 export default function chooseGameMode() {
 	let gamemode: string = '';
 	while (!gamemode) {
-		switch (rl.question('Which gamemode do you want to play? 0, 1 or 2: ')) {
+		switch (input('Which gamemode do you want to play? 0, 1 or 2: ')) {
 			case '0':
 				console.log('Exited');
 				process.exit(0);

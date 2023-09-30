@@ -1,11 +1,11 @@
 import color from '../utils/color';
 import { Char } from '../types/type';
-import { strCapitalize } from '../utils/helper';
-import * as rl from 'readline-sync';
+import { input, sleep, strCapitalize } from '../utils/helper';
 import * as fs from 'fs';
 import { press_to_continue } from '../utils/helper';
+import getMobWithProbability from './inits/get_entities_by_rarity';
 
-function characterSelection() {
+function characterSelection(id?: number) {
 	const characters: Char[] = JSON.parse(
 		fs.readFileSync('./data/players.json', 'utf-8'),
 	);
@@ -38,17 +38,22 @@ function characterSelection() {
 				'green',
 			)})\n`,
 		);
+		console.log('');
 	});
 	console.log('');
+	console.log(color(`Enter 'random' to play as a random character`, 'yellow'));
 	let userInput = '';
 	while (true) {
 		userInput = strCapitalize(
-			rl.question('Who do you wish to play as? (Default: Link) '),
+			input('Who do you wish to play as? (Default: Link) '),
 		);
 
 		if (userInput === '') {
 			userInput = 'Link';
 			break;
+		}
+		if (userInput === 'Random') {
+			userInput = getMobWithProbability(characters).name;
 		}
 		if (
 			characters_ids.includes(Number(userInput)) ||
@@ -71,6 +76,23 @@ function characterSelection() {
 	const playerCharacter: Char[] = characters.filter(
 		(character) => character.name === finalResponse,
 	);
+
+	// let userConfirmation: string = '';
+	// let returned_value: number = id ? id : playerCharacter[0].id;
+	// while (!userConfirmation) {
+	// 	userConfirmation = input(
+	// 		`\nReselect character? ${color('[y/n]', 'white')}: `,
+	// 	).toLowerCase();
+	// 	if (!['y', 'n'].includes(userConfirmation)) {
+	// 		userConfirmation = '';
+	// 	}
+	// 	if (userConfirmation === 'y') {
+	// 		returned_value = characterSelection(returned_value);
+	// 	}
+	// 	if (userConfirmation === 'n') break;
+	// }
+	//press_to_continue();
+
 	console.log(`\nYou will play as ${color(finalResponse, 'cyan')}`);
 	press_to_continue();
 	return playerCharacter[0].id;
