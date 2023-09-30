@@ -14,8 +14,9 @@ import {
 	randomIntFromInterval,
 } from '../utils/helper';
 import getEntitiesByRarity from '../lib/inits/get_entities_by_rarity';
-import { handleQuantity } from '../lib/handle_object';
+import { handleQuantity, searchObjById } from '../lib/handle_object';
 import * as fs from 'fs';
+import { log } from 'console';
 
 function displayStats(
 	currentFloor: number,
@@ -94,7 +95,6 @@ function displayBattlePhase({
 	monster_current_floor,
 	current_floor,
 	gamedata,
-	originalgamedata,
 	gamemode,
 }: {
 	turn: TurnType;
@@ -102,9 +102,8 @@ function displayBattlePhase({
 	monster_current_floor: Char[];
 	current_floor: number;
 	gamedata: SaveType,
-	originalgamedata: SaveType,
 	gamemode: Gamemode
-}): [boolean, TurnType, boolean] {
+}): [boolean, TurnType, boolean] { // gameover, turn, fleestate
 	let playerOption: string = '';
 	
 	let protected_state: boolean = false;
@@ -112,7 +111,7 @@ function displayBattlePhase({
 	if (turn === 'player') {
 		console.log('===== Options =====');
 		if(gamemode === 'enhanced') {
-			console.log('1. Attack   | 2. Heal   | 3. Protect   | 4. Flee the tower   | 5. Save and quit');
+			console.log('1. Attack   | 2. Heal   | 3. Protect   | 4. Flee the tower   | 5. Save and quit   | 9. Show inventory');
 		} else {
 			console.log('1. Attack   | 2. Heal   | 3. Save and quit');
 		}
@@ -120,7 +119,7 @@ function displayBattlePhase({
 		// GET PLAYER OPTION
 		while (!playerOption) {
 			playerOption = input('What will you do?: ');
-			if (!['1', '2', '3', '4', '5'].includes(playerOption) && gamemode === 'enhanced') {
+			if (!['1', '2', '3', '4', '5', '9'].includes(playerOption) && gamemode === 'enhanced') {
 				playerOption = '';
 				continue;
 			}
@@ -128,7 +127,7 @@ function displayBattlePhase({
 				playerOption = '';
 				continue;
 			}
-			console.clear();
+			if (playerOption !== '9') console.clear()
 
 			// UPDATE DATA BASED ON PLAYEROPTION
 			switch (playerOption) {
@@ -206,6 +205,20 @@ function displayBattlePhase({
 						fs.writeFileSync('./.savegame.json', JSON.stringify(gamedata, null, 2));
 						console.log('Saved');
 						process.exit(0);
+					}
+					continue;
+				case '9':
+					if (gamemode === 'enhanced') {
+						console.log('');
+						gamedata.inventory.filter(x => x.quantity > 0).forEach((Item) => {
+							console.log(`Name: ${color(Item.name, 'white')} | Qty: ${color(Item.quantity, 'white')}`);
+							console.log(`Description: ${Item.description}`);
+							console.log(Item.effect !== 0 ? `Effect: +${Item.effect} HP` : `Effect: has no effect`);
+							console.log('');
+						})
+						press_to_continue();
+						playerOption = '';
+						return [false, 'player', false];
 					}
 					continue;
 			}
@@ -295,7 +308,7 @@ function displayLastmessageLevelingSpecialRoom({
 	trapsObj: TrapType[];
 	inventoryObj: Item[];
 	gamedata: SaveType;
-}): number[] {
+}): number[] { // [currentfloor, exp, lvl, coins_gained]
 	if (monster_current_floor_length === 0) {
 		if (current_floor === floor - 1) {
 			console.log(color(`You defeated all the monsters, you won!`, 'green'));
@@ -306,12 +319,12 @@ function displayLastmessageLevelingSpecialRoom({
 		if (gamemode === 'enhanced') {
 			if (current_floor % 10 === 0 && current_floor !== 0) {
 				console.clear();
-				console.log(`You gained ${color('10', 'green')} EXP!`);
+				console.log(`You gained ${color('10', 'green')} EXP and ${color('1', 'yellow')} coin!`);
 				player_exp += 10;
 				press_to_continue();
 			} else {
 				console.clear();
-				console.log(`You gained ${color('5', 'green')} EXP!`);
+				console.log(`You gained ${color('5', 'green')} EXP and ${color('1', 'yellow')} coin!`);
 				player_exp += 5;
 				press_to_continue();
 			}
@@ -453,9 +466,9 @@ function displayLastmessageLevelingSpecialRoom({
 			`You defeated the current floor, you enter floor ${current_floor + 2}`,
 		);
 		press_to_continue();
-		return [(gamedata.current_floor += 1), player_exp, player_lvl];
+		return [(gamedata.current_floor += 1), player_exp, player_lvl, 1];
 	}
-	return [gamedata.current_floor, player_exp, player_lvl];
+	return [gamedata.current_floor, player_exp, player_lvl, 0];
 }
 
 export {

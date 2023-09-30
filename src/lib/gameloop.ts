@@ -1,6 +1,7 @@
 import { SaveType, TurnType, Char, TrapType } from '../types/type';
 import * as glfunc from '../gameloop_functions/gameloop_functions';
 import * as fs from 'fs';
+import { handleQuantity, searchObjById } from './handle_object';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
@@ -50,7 +51,6 @@ async function runGame(gameData: SaveType) {
 			monster_current_floor: currentGameData.monsters[currentFloor],
 			playerObj: currentGameData.player,
 			gamedata: currentGameData,
-			originalgamedata: gameData,
 			gamemode: gameData.gamemode,
 		});
 
@@ -81,6 +81,7 @@ async function runGame(gameData: SaveType) {
 		currentFloor = playerstats[0]
 		currentGameData.player_exp = playerstats[1],
 		currentGameData.player_lvl = playerstats[2]
+		handleQuantity(currentGameData.inventory, 1, 'add', playerstats[3]);
 		if (currentGameData.player_exp >= 30) currentGameData.player_exp %= 30;
 	}
 }
