@@ -1,14 +1,17 @@
 import color from '../utils/color';
-import { Char } from '../types/type';
+import { Char, Class } from '../types/type';
 import { input, sleep, strCapitalize } from '../utils/helper';
 import * as fs from 'fs';
 import { press_to_continue } from '../utils/helper';
 import getMobWithProbability from './inits/get_entities_by_rarity';
+import { searchObjById } from './handle_object';
 
 function characterSelection(id?: number) {
 	const characters: Char[] = JSON.parse(
 		fs.readFileSync('./data/players.json', 'utf-8'),
 	);
+	const races: Class[] = JSON.parse(fs.readFileSync('./data/races.json', 'utf-8'));
+	const classes: Class[] = JSON.parse(fs.readFileSync('./data/classes.json', 'utf-8'));
 	const characters_ids = characters.map((character) => character.id);
 	const characters_names = characters.map((character) => character.name);
 
@@ -19,7 +22,7 @@ function characterSelection(id?: number) {
 	characters.forEach((character) => {
 		console.log(
 			color(
-				`${character.id}. ${character.name} [Race: ${character.race}, Class: ${character.class}]`,
+				`${character.id}. ${character.name} [Race: ${searchObjById(races, character.race).name}, Class: ${searchObjById(classes, character.class).name}]`,
 				'cyan',
 			),
 		);
