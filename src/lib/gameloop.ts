@@ -58,7 +58,7 @@ async function runGame(gameData: SaveType) {
 		turn = returnState[1];
 		gameOver = returnState[0];
 
-		if (flee_state) {
+		if (flee_state && currentFloor > 1) {
 			currentGameData.player.hp *= 0.1;
 			currentFloor = 0;
 			currentGameData.monsters = structuredClone(gameData.monsters);
