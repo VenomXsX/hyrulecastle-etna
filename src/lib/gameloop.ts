@@ -4,17 +4,8 @@ import * as fs from 'fs';
 
 async function runGame(gameData: SaveType) {
 	// clone the gamedata so that we can maybe add a save feature
-	let {
-		player,
-		monsters,
-		floor,
-		gamemode,
-		difficulty,
-		player_lvl,
-		player_exp,
-		inventory,
-	} = structuredClone(gameData);
-	let currentFloor: number = 0;
+	let currentGameData: SaveType = structuredClone(gameData);
+	let currentFloor: number = currentGameData.current_floor;
 	let turn: TurnType = 'player';
 	let traps: TrapType[] = JSON.parse(
 		fs.readFileSync('./data/traps.json', 'utf-8'),
@@ -22,62 +13,75 @@ async function runGame(gameData: SaveType) {
 	console.clear();
 
 	let gameOver: boolean | undefined = false;
+	let flee_state: boolean = false;
 
 	while (!gameOver) {
 		const player_remaining_hp_for_display: number = Math.round(
-			(player.hp / player.max_hp) * 100,
+			(currentGameData.player.hp / currentGameData.player.max_hp) * 100,
 		);
 		const monster_remaining_hp_for_display: number = Math.round(
-			(monsters[currentFloor][0].hp / gameData.monsters[currentFloor][0].hp) *
+			(currentGameData.monsters[currentFloor][0].hp / gameData.monsters[currentFloor][0].hp) *
 				100,
 		);
 		console.clear();
 
 		// STATS DISPLAY
-		glfunc.displayStats(currentFloor, floor, gamemode, difficulty);
+		glfunc.displayStats(currentFloor, currentGameData.floor, currentGameData.gamemode, currentGameData.difficulty);
 
 		// LEVEL INFO
-		glfunc.displayLevel(gamemode, player_lvl, player_exp);
+		glfunc.displayLevel(currentGameData.gamemode, currentGameData.player_lvl, currentGameData.player_exp);
 
 		// HP BAR
 		glfunc.displayHPBar({
-			player_name: player.name,
+			player_name: currentGameData.player.name,
 			player_remaining_hp_for_display: player_remaining_hp_for_display,
-			player_hp: player.hp,
-			player_max_hp: player.max_hp,
-			monster_name: monsters[currentFloor][0].name,
-			monster_hp: monsters[currentFloor][0].hp,
+			player_hp: currentGameData.player.hp,
+			player_max_hp: currentGameData.player.max_hp,
+			monster_name: currentGameData.monsters[currentFloor][0].name,
+			monster_hp: currentGameData.monsters[currentFloor][0].hp,
 			monster_max_hp: gameData.monsters[currentFloor][0].hp,
 			monster_remaining_hp_for_display: monster_remaining_hp_for_display,
 		});
 
 		// BATTLE OPTION
-		let returnState: [boolean, TurnType] = glfunc.displayBattlePhase({
+		let returnState: [boolean, TurnType, boolean] = glfunc.displayBattlePhase({
 			turn: turn,
 			current_floor: currentFloor,
-			monster_current_floor: monsters[currentFloor],
-			playerObj: player,
+			monster_current_floor: currentGameData.monsters[currentFloor],
+			playerObj: currentGameData.player,
+			gamedata: currentGameData,
+			originalgamedata: gameData,
+			gamemode: gameData.gamemode,
 		});
 
+		flee_state = returnState[2];
 		turn = returnState[1];
 		gameOver = returnState[0];
 
+		if (flee_state) {
+			currentGameData.player.hp *= 0.1;
+			currentFloor = 0;
+			currentGameData.monsters = structuredClone(gameData.monsters);
+			continue;
+		}
+
 		// LAST MESSAGE & LEVELING & SPECIAL ROOM
 		let playerstats: number[] = glfunc.displayLastmessageLevelingSpecialRoom({
-			monster_current_floor_length: monsters[currentFloor].length,
+			monster_current_floor_length: currentGameData.monsters[currentFloor].length,
 			current_floor: currentFloor,
-			floor: floor,
-			gamemode: gamemode,
-			inventoryObj: inventory,
-			player_exp: player_exp,
-			player_lvl: player_lvl,
-			playerObj: player,
+			floor: currentGameData.floor,
+			gamemode: currentGameData.gamemode,
+			inventoryObj: currentGameData.inventory,
+			player_exp: currentGameData.player_exp,
+			player_lvl: currentGameData.player_lvl,
+			playerObj: currentGameData.player,
 			trapsObj: traps,
+			gamedata: currentGameData,
 		});
 		currentFloor = playerstats[0]
-		player_exp = playerstats[1],
-		player_lvl = playerstats[2]
-		if (player_exp >= 30) player_exp %= 30;
+		currentGameData.player_exp = playerstats[1],
+		currentGameData.player_lvl = playerstats[2]
+		if (currentGameData.player_exp >= 30) currentGameData.player_exp %= 30;
 	}
 }
 export default runGame;

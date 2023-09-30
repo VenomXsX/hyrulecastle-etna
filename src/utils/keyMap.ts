@@ -7,8 +7,9 @@ export const keyMap = {
 	exit: '03', // [Ctrl + C]
 	one: "31", // 1
 	two: "32", // 2
+	three: '33', // 3
 	zero: "30", // 0
-	'': '', // type error handle...
+	// '': '', // type error handle...
 };
 
 export type KeyMap = keyof typeof keyMap;

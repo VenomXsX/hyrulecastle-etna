@@ -63,6 +63,7 @@ type SaveType = {
 	difficulty: string;
 	player_lvl: number;
 	player_exp: number;
+	current_floor: number;
 };
 
 type TrapType = {

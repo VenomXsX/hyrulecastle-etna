@@ -6,6 +6,7 @@ import {
 	Item,
 	TurnType,
 	MonsterAndFloor,
+	SaveType,
 } from '../types/type';
 import {
 	press_to_continue,
@@ -14,6 +15,7 @@ import {
 } from '../utils/helper';
 import getEntitiesByRarity from '../lib/inits/get_entities_by_rarity';
 import { handleQuantity } from '../lib/handle_object';
+import * as fs from 'fs';
 
 function displayStats(
 	currentFloor: number,
@@ -91,22 +93,38 @@ function displayBattlePhase({
 	playerObj,
 	monster_current_floor,
 	current_floor,
+	gamedata,
+	originalgamedata,
+	gamemode,
 }: {
 	turn: TurnType;
 	playerObj: Char;
 	monster_current_floor: Char[];
 	current_floor: number;
-}): [boolean, TurnType] {
+	gamedata: SaveType,
+	originalgamedata: SaveType,
+	gamemode: Gamemode
+}): [boolean, TurnType, boolean] {
 	let playerOption: string = '';
-
+	
+	let protected_state: boolean = false;
+	let flee_state: boolean = false;
 	if (turn === 'player') {
 		console.log('===== Options =====');
-		console.log('1. Attack   | 2. Heal');
+		if(gamemode === 'enhanced') {
+			console.log('1. Attack   | 2. Heal   | 3. Protect   | 4. Flee the tower   | 5. Save and quit');
+		} else {
+			console.log('1. Attack   | 2. Heal   | 3. Save and quit');
+		}
 
 		// GET PLAYER OPTION
 		while (!playerOption) {
 			playerOption = input('What will you do?: ');
-			if (!['1', '2'].includes(playerOption)) {
+			if (!['1', '2', '3', '4', '5'].includes(playerOption) && gamemode === 'enhanced') {
+				playerOption = '';
+				continue;
+			}
+			if (!['1', '2', '3'].includes(playerOption) && gamemode === 'default') {
 				playerOption = '';
 				continue;
 			}
@@ -160,9 +178,39 @@ function displayBattlePhase({
 						);
 						break;
 					}
+				case '3':
+					if(gamemode === 'enhanced') {
+						protected_state = true;
+						console.log(`You chose to brace yourself for the next attack, you only receive ${color('half', 'green')} the damage`);
+						break;
+					}
+					console.clear();
+					console.log('Saving...');
+					fs.writeFileSync('./.savegame.json', JSON.stringify(gamedata, null, 2));
+					console.log('Saved');
+					process.exit(0);
+				case '4':
+					if (gamemode === 'enhanced') {
+						console.log(`You decided to flee the tower, you will start again with some ${color('penalties', 'red')}...`);
+						return [false, turn, true];
+						// gamedata = originalgamedata;
+						// gamedata.player.hp *= 0.1;
+						// break;
+					}
+					continue;
+				case '5':
+					if (gamemode === 'enhanced') {
+						const SaveGameFile: SaveType = structuredClone(gamedata);
+						console.clear();
+						console.log('Saving...');
+						fs.writeFileSync('./.savegame.json', JSON.stringify(gamedata, null, 2));
+						console.log('Saved');
+						process.exit(0);
+					}
+					continue;
 			}
 		}
-		if (monster_current_floor[0].hp <= 0) {
+		if (monster_current_floor[0].hp <= 0 || flee_state) {
 			turn = 'player';
 		} else {
 			turn = 'monster';
@@ -183,6 +231,9 @@ function displayBattlePhase({
 		if (crit) monster_dmg *= 2;
 		monster_dmg = monster_dmg - (monster_dmg * playerObj.def) / 100;
 		monster_dmg = Math.floor(monster_dmg);
+		if (protected_state) {
+			monster_dmg *= 0.5;
+		}
 
 		playerObj.hp -= monster_dmg;
 		console.clear();
@@ -210,7 +261,7 @@ function displayBattlePhase({
 			`\nYou died on ${color('floor ' + (current_floor + 1), 'red')}`,
 		);
         press_to_continue();
-		return [true, turn];
+		return [true, turn, false];
 	}
 
 	if (monster_current_floor[0].hp <= 0) {
@@ -219,7 +270,7 @@ function displayBattlePhase({
 		monster_current_floor.shift();
 		press_to_continue();
 	}
-	return [false, turn];
+	return [false, turn, false];
 }
 
 function displayLastmessageLevelingSpecialRoom({
@@ -232,6 +283,7 @@ function displayLastmessageLevelingSpecialRoom({
 	playerObj,
 	trapsObj,
 	inventoryObj,
+	gamedata,
 }: {
 	monster_current_floor_length: number;
 	current_floor: number;
@@ -242,6 +294,7 @@ function displayLastmessageLevelingSpecialRoom({
 	playerObj: Char;
 	trapsObj: TrapType[];
 	inventoryObj: Item[];
+	gamedata: SaveType;
 }): number[] {
 	if (monster_current_floor_length === 0) {
 		if (current_floor === floor - 1) {
@@ -399,9 +452,10 @@ function displayLastmessageLevelingSpecialRoom({
 		console.log(
 			`You defeated the current floor, you enter floor ${current_floor + 2}`,
 		);
-		return [(current_floor += 1), player_exp, player_lvl];
+		press_to_continue();
+		return [(gamedata.current_floor += 1), player_exp, player_lvl];
 	}
-	return [current_floor, player_exp, player_lvl];
+	return [gamedata.current_floor, player_exp, player_lvl];
 }
 
 export {

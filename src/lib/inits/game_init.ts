@@ -30,7 +30,7 @@ function getModifierForMobs(
 		if (
 			['hp', 'mp', 'str', 'int', 'def', 'res', 'spd', 'luck'].includes(current)
 		) {
-			return { ...acc, [current]: (mob[current] *= multiplier) };
+			return { ...acc, [current]: (Math.ceil(mob[current] *= multiplier)) };
 		}
 		return { ...acc, [current]: mob[current] };
 	}, {}) as Char;
@@ -75,7 +75,7 @@ function gameInit(mode: Gamemode): SaveType {
 					current,
 				)
 			) {
-				return { ...acc, [current]: (boss[current] *= multiplier) };
+				return { ...acc, [current]: (Math.ceil(boss[current] *= multiplier)) };
 			}
 			return { ...acc, [current]: boss[current] };
 		},
@@ -102,14 +102,14 @@ function gameInit(mode: Gamemode): SaveType {
 	}
 
 	//FIXME: [DEBUG]
-	_debug({
-		player,
-		floor,
-		gamemode: mode,
-		monsters: monstersWithFloor,
-		inventory: [],
-		difficulty: player_difficulty,
-	});
+	// _debug({
+	// 	player,
+	// 	floor,
+	// 	gamemode: mode,
+	// 	monsters: monstersWithFloor,
+	// 	inventory: [],
+	// 	difficulty: player_difficulty,
+	// });
 
 	return {
 		player,
@@ -122,6 +122,7 @@ function gameInit(mode: Gamemode): SaveType {
 		difficulty: player_difficulty,
 		player_lvl: 1,
 		player_exp: 0,
+		current_floor: 0
 	};
 }
 export default gameInit;
