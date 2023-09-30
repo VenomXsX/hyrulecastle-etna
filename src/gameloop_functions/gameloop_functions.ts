@@ -104,7 +104,7 @@ function displayBattlePhase({
 	gamedata: SaveType,
 	originalgamedata: SaveType,
 	gamemode: Gamemode
-}): [boolean, TurnType] {
+}): [boolean, TurnType, boolean] {
 	let playerOption: string = '';
 	
 	let protected_state: boolean = false;
@@ -192,10 +192,10 @@ function displayBattlePhase({
 				case '4':
 					if (gamemode === 'enhanced') {
 						console.log(`You decided to flee the tower, you will start again with some ${color('penalties', 'red')}...`);
-						flee_state = true;
-						gamedata = originalgamedata;
-						gamedata.player.hp *= 0.1;
-						break;
+						return [false, turn, true];
+						// gamedata = originalgamedata;
+						// gamedata.player.hp *= 0.1;
+						// break;
 					}
 					continue;
 				case '5':
@@ -261,7 +261,7 @@ function displayBattlePhase({
 			`\nYou died on ${color('floor ' + (current_floor + 1), 'red')}`,
 		);
         press_to_continue();
-		return [true, turn];
+		return [true, turn, false];
 	}
 
 	if (monster_current_floor[0].hp <= 0) {
@@ -270,7 +270,7 @@ function displayBattlePhase({
 		monster_current_floor.shift();
 		press_to_continue();
 	}
-	return [false, turn];
+	return [false, turn, false];
 }
 
 function displayLastmessageLevelingSpecialRoom({

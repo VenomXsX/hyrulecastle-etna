@@ -13,6 +13,7 @@ async function runGame(gameData: SaveType) {
 	console.clear();
 
 	let gameOver: boolean | undefined = false;
+	let flee_state: boolean = false;
 
 	while (!gameOver) {
 		const player_remaining_hp_for_display: number = Math.round(
@@ -43,7 +44,7 @@ async function runGame(gameData: SaveType) {
 		});
 
 		// BATTLE OPTION
-		let returnState: [boolean, TurnType] = glfunc.displayBattlePhase({
+		let returnState: [boolean, TurnType, boolean] = glfunc.displayBattlePhase({
 			turn: turn,
 			current_floor: currentFloor,
 			monster_current_floor: currentGameData.monsters[currentFloor],
@@ -53,8 +54,16 @@ async function runGame(gameData: SaveType) {
 			gamemode: gameData.gamemode,
 		});
 
+		flee_state = returnState[2];
 		turn = returnState[1];
 		gameOver = returnState[0];
+
+		if (flee_state) {
+			currentGameData.player.hp *= 0.1;
+			currentFloor = 0;
+			currentGameData.monsters = structuredClone(gameData.monsters);
+			continue;
+		}
 
 		// LAST MESSAGE & LEVELING & SPECIAL ROOM
 		let playerstats: number[] = glfunc.displayLastmessageLevelingSpecialRoom({
