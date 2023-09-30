@@ -82,6 +82,7 @@ async function runGame(gameData: SaveType) {
 		currentGameData.player_exp = playerstats[1],
 		currentGameData.player_lvl = playerstats[2]
 		handleQuantity(currentGameData.inventory, 1, 'add', playerstats[3]);
+		if (playerstats[4] !== -1) handleQuantity(currentGameData.inventory, playerstats[4], 'add', 1);
 		if (currentGameData.player_exp >= 30) currentGameData.player_exp %= 30;
 	}
 }

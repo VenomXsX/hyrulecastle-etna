@@ -308,7 +308,8 @@ function displayLastmessageLevelingSpecialRoom({
 	trapsObj: TrapType[];
 	inventoryObj: Item[];
 	gamedata: SaveType;
-}): number[] { // [currentfloor, exp, lvl, coins_gained]
+}): number[] { // [currentfloor, exp, lvl, coins_gained, drop_item_id]
+	let drop_item_id: number = -1;
 	if (monster_current_floor_length === 0) {
 		if (current_floor === floor - 1) {
 			console.log(color(`You defeated all the monsters, you won!`, 'green'));
@@ -320,11 +321,21 @@ function displayLastmessageLevelingSpecialRoom({
 			if (current_floor % 10 === 0 && current_floor !== 0) {
 				console.clear();
 				console.log(`You gained ${color('10', 'green')} EXP and ${color('1', 'yellow')} coin!`);
+				let drop: boolean = Math.random() < 0.75;
+				if (drop) {
+					drop_item_id = randomIntFromInterval(1, inventoryObj.length);
+					console.log(`\nThe enemy dropped a ${color(searchObjById(inventoryObj, drop_item_id).name, 'white')}`)
+				}
 				player_exp += 10;
 				press_to_continue();
 			} else {
 				console.clear();
 				console.log(`You gained ${color('5', 'green')} EXP and ${color('1', 'yellow')} coin!`);
+				let drop: boolean = Math.random() < 0.25;
+				if (drop) {
+					drop_item_id = randomIntFromInterval(1, inventoryObj.length);
+					console.log(`\nThe enemy dropped a ${color(searchObjById(inventoryObj, drop_item_id).name, 'white')}`)
+				}
 				player_exp += 5;
 				press_to_continue();
 			}
@@ -466,9 +477,9 @@ function displayLastmessageLevelingSpecialRoom({
 			`You defeated the current floor, you enter floor ${current_floor + 2}`,
 		);
 		press_to_continue();
-		return [(gamedata.current_floor += 1), player_exp, player_lvl, 1];
+		return [(gamedata.current_floor += 1), player_exp, player_lvl, 1, drop_item_id];
 	}
-	return [gamedata.current_floor, player_exp, player_lvl, 0];
+	return [gamedata.current_floor, player_exp, player_lvl, 0, drop_item_id];
 }
 
 export {
